@@ -1822,7 +1822,6 @@ GEM
       actionpack (>= 5.2)
       activesupport (>= 5.2)
       sprockets (>= 3.0.0)
-    sqlite3 (1.4.2)
     sshkit (1.21.2)
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
@@ -1921,7 +1920,6 @@ DEPENDENCIES
   scout_apm
   selenium-webdriver
   spring
-  sqlite3
   timezone_finder
   turbolinks (~> 5)
   web-console (>= 4.1.0)
