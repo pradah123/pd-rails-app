@@ -18,13 +18,13 @@ development:
   # password: 'TyyLD9NMQTNHAn74'
   
 test:
-    <<: *default
-  database: development
+  <<: *default
+  database: test
   username: 'postgres'
   password: 'biosmart'
 
 staging:
-    <<: *default
+  <<: *default
   database: staging
   username: 'postgres'
   password: 'biosmart'
