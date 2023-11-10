@@ -18,18 +18,23 @@ development:
   # password: 'TyyLD9NMQTNHAn74'
   
 test:
-  <<: *default
-  database: db/test.sqlite3
+    <<: *default
+  database: development
+  username: 'postgres'
+  password: 'biosmart'
 
 staging:
-  <<: *default
-  database: db/staging.sqlite3
+    <<: *default
+  database: staging
+  username: 'postgres'
+  password: 'biosmart'
 
 production:
   <<: *default
-  encoding: unicode
-  database: biosmart_prod
-  host: biosmart-prod-cluster.cluster-cvij7t7ozqay.ap-southeast-2.rds.amazonaws.com
-  pool: 5
-  username: 'dbuser'
-  password: 'TyyLD9NMQTNHAn74'
+  url: <%= ENV['DATABASE_URL'] %>
+  # encoding: unicode
+  # database: biosmart_prod
+  # host: biosmart-prod-cluster.cluster-cvij7t7ozqay.ap-southeast-2.rds.amazonaws.com
+  # pool: 5
+  # username: 'dbuser'
+  # password: 'TyyLD9NMQTNHAn74'
