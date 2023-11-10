@@ -1,0 +1,46 @@
+version: '3.2'
+
+volumes:
+  postgres_data: {}
+
+services:
+  app:
+    tty: true
+    stdin_open: true
+    build:
+      context: .
+      dockerfile: ./docker/app.Dockerfile
+      args:
+        - ENV_TYPE=development
+    restart: on-failure
+    ports:
+      - 3000:3000
+    depends_on:
+      - db
+    links:
+      - db
+    volumes:
+      - type: bind
+        source: ./
+        target: /var/www/biosmart
+    environment:
+      - RAILS_ENV=development
+
+  db:
+    build:
+      context: .
+      dockerfile: ./docker/db.Dockerfile
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=oBa5UiDLZM
+      - POSTGRES_DB=biosmart_dev
+    ports:
+      - 5432:5432    
+    volumes:
+      - postgres_data:/var/lib/postgres/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "--username=postgres", "--dbname=biosmart_dev"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+        

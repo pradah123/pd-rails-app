@@ -1,0 +1,54 @@
+<div class="row mt-5">
+  <div class="col">
+  	<div class="row">
+  		<div class="col h4"><a href="<%= c.get_path %>" class="contest-title-link"><%= c.title %></a></div>
+    </div>	  
+  	<div class="row mt-3">
+  		<div class="col h6">For observations made between <%= c.starts_at.strftime '%Y/%m/%d' %> and <%= c.ends_at.strftime '%Y/%m/%d' %></div>
+    </div>
+  	<div class="row mb-3">
+  		<div class="col h6">Submissions accepted up to <%= c.last_submission_accepted_at.strftime '%Y/%m/%d' %></div>
+    </div>
+  </div>   		
+	<div class="col-2 d-flex justify-content-end">
+    <% if show_more_link==true %>
+      <a href="<%= observations_object.region.get_region_contest_path c  %>" class="text-muted">region stats</a>  
+    <% end %>
+  </div>
+</div>
+<div class="row mt-3">
+	<div class="col-10"><%= c.description&.html_safe || '' %></div>
+</div>
+
+<% if c.starts_at>Time.now %>
+  <div class="row my-3">
+  	<div class="col d-flex justify-content-center fw-bold" id="countdown-<%= c.id %>">
+    </div>		
+  </div>
+	<script>	
+		(function() {
+			var countDownDate = new Date("<%= c.starts_at %>").getTime();
+	 		var x = setInterval(function() {
+  		var now = new Date().getTime();
+   	 	var distance = countDownDate - now;
+  		var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+  		var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  		var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+  		var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+  		var str = "";
+  		if(days!=0) str += days + " days ";
+  		if(days!=0 || hours!=0 ) str += hours + " hours ";
+  		if( (days!=0 && hours!=0 ) || minutes!=0) str += minutes + " minutes ";
+  		if( (days!=0 && hours!=0 && minutes!=0) || seconds!=0) str += seconds + " seconds"
+  		document.getElementById("countdown-<%= c.id %>").innerHTML = str;
+
+    	if (distance < 0) { clearInterval(x); document.getElementById("countdown-<%= c.id %>").innerHTML = ""; }
+		}, 1000);
+	 })();
+</script>
+<% end %>
+
+<% if c.starts_at<Time.now && show_stats.nil? || show_stats==true %>
+	<%= render partial: 'statistics', locals: { object: observations_object } %>
+<% end %>

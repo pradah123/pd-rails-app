@@ -1,0 +1,80 @@
+<div class="modal fade" tabindex="-1" id="<%= id %>">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">        
+        <h4 class="modal-title fw-heavy"><%= title %></h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <% if @user && @user.admin? %>
+          <div class="row justify-content-center">
+            <div class="col-8 col-lg-4 mb-3">
+              <div class="input-group">
+                <select class="form-select" id="status_profile">
+                  <option value="opened" <%= user && user.opened? ? 'selected' : '' %>>opened</option>
+                  <option value="activated" <%= user && user.activated? ? 'selected' : '' %>>activated</option>
+                  <option value="logged_in" <%= user && user.logged_in? ? 'selected' : '' %>>logged_in</option>
+                  <option value="logged_out" <%= user && user.activated? ? 'selected' : '' %>>logged_out</option>
+                  <option value="locked" <%= user && user.locked? ? 'selected' : '' %>>locked</option>
+                  <option value="closed" <%= user && user.closed? ? 'selected' : '' %>>closed</option>
+                </select>
+              </div>
+            </div>  
+            <div class="col-8 col-lg-4 mb-3">
+              <div class="input-group">
+                <select class="form-select" id="role_profile">
+                  <option value="representative" <%= user && user.representative? ? 'selected' : '' %>>representative</option>
+                  <option value="admin" <%= user && user.admin? ? 'selected' : '' %>>admin</option>
+                </select>
+              </div>            
+            </div>   
+          </div>
+        <% end %>
+        <div class="row justify-content-center mb-3">
+          <div class="col-8">
+            <div class="input-group">
+              <input type="text" class="form-control organization_name_profile<%= id %>" placeholder="Organization Name" required="required" value="<%= user ? user.organization_name : '' %>">
+            </div>
+          </div>      
+        </div>            
+        <div class="row justify-content-center mb-3">
+          <div class="col-8">
+            <div class="input-group">
+              <input type="email" class="form-control email_profile<%= id %>" placeholder="Email" required="required" value="<%= user ? user.email : '' %>">
+            </div>
+          </div>
+        </div>
+        <div class="row justify-content-center mb-3">
+          <div class="col-8">            
+            <div class="form-group">
+              <button class="btn btn-outline-secondary w-100" id="<%= id %>_profile_action" data-id="<%= user ? user.id : '' %>" disabled>Save Changes</button>
+            </div>
+          </div>
+        </div>
+        <div class="row justify-content-center mb-3">
+          <div class="col-8 validation-messages">            
+            <span class="text-danger validation-ok organization_name_unique">Organization name is already taken.</span>
+            <span class="text-danger validation-ok email_unique">Email is already taken.</span>
+            <span class="text-danger validation-ok organization_name">Organization name is required.</span>
+            <span class="text-danger validation-ok email">Email is required.</span>
+          </div>
+        </div>
+        <% if include_logout_link==true %>
+          <div class="row justify-content-center my-3 border-top">
+            <div class="col-8 mt-5">
+              <button class="btn btn-outline-secondary w-100 logout_action">Logout</button>
+            </div>  
+          </div>
+        <% end %>  
+        <div class="row justify-content-center my-3 border-top">
+          <div class="col-8 mt-5">
+            <button class="btn btn-outline-danger w-100 close_account_action">Close Account</button>
+          </div>  
+        </div>            
+      </div>
+      <div class="modal-footer mt-0">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

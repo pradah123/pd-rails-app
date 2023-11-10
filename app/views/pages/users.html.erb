@@ -1,0 +1,32 @@
+
+<div class="row justify-content-center my-5">
+  <div class="col-6 col-lg-4">
+    <button type="button" class="btn btn-warning w-100" data-bs-toggle="modal" data-bs-target="#new_user">+ New User</button>
+  </div>
+</div>
+
+<%= render partial: 'signup_modal', locals: { title: 'New User', button_text: 'Save', id: 'new_user', include_login_link: false } %>
+
+<div class="row my-5">
+  <div class="col-3 fw-bold">Organization Name</div>
+  <div class="col-3 fw-bold">Email</div>
+  <div class="col-2 fw-bold">Role</div>
+  <div class="col-2 fw-bold">Status</div>
+  <div class="col-2"></div>
+</div>
+
+<% @users.each do |u| %>
+  <div class="row mb-3">
+  	<div class="col-3"><%= u.organization_name %></a></div>
+  	<div class="col-3"><%= u.email %></div>
+  	<div class="col-2"><%= u.role %></div>
+    <div class="col-2"><%= u.status %></div>
+  	<div class="col-2">
+      <a role="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#user<%= u.id %>_modal">Edit</a>
+    </div>
+  </div>
+<% end %>
+
+<% @users.each do |u| %>
+  <%= render partial: 'profile_modal', locals: { title: 'Edit User', id: "user#{ u.id }_modal", include_logout_link: false, user: u } %>
+<% end %>  

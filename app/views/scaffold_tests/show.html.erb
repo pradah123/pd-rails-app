@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @scaffold_test %>
+
+<div>
+  <%= link_to "Edit this scaffold test", edit_scaffold_test_path(@scaffold_test) %> |
+  <%= link_to "Back to scaffold tests", scaffold_tests_path %>
+
+  <%= button_to "Destroy this scaffold test", @scaffold_test, method: :delete %>
+</div>

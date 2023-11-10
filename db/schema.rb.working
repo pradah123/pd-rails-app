@@ -1,0 +1,385 @@
+# This file is auto-generated from the current state of the database. Instead
+# of editing this file, please use the migrations feature of Active Record to
+# incrementally modify your database, and then regenerate this schema definition.
+#
+# This file is the source Rails uses to define your schema when running `bin/rails
+# db:schema:load`. When creating a new database, `bin/rails db:schema:load` tends to
+# be faster and is potentially less error prone than running all of your
+# migrations from scratch. Old migrations may fail to apply correctly if those
+# migrations use external dependencies or application code.
+#
+# It's strongly recommended that you check this file into your version control system.
+
+ActiveRecord::Schema[7.0].define(version: 2023_05_02_071139) do
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
+  create_table "action_text_rich_texts", force: :cascade do |t|
+    t.text "name"
+    t.text "body"
+    t.text "record_type"
+    t.bigint "record_id"
+    t.timestamptz "created_at"
+    t.timestamptz "updated_at"
+    t.index ["record_type", "record_id", "name"], name: "idx_16661_index_action_text_rich_texts_uniqueness", unique: true
+  end
+
+  create_table "active_storage_attachments", force: :cascade do |t|
+    t.text "name"
+    t.text "record_type"
+    t.bigint "record_id"
+    t.bigint "blob_id"
+    t.timestamptz "created_at"
+    t.index ["blob_id"], name: "idx_16643_index_active_storage_attachments_on_blob_id"
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "idx_16643_index_active_storage_attachments_uniqueness", unique: true
+  end
+
+  create_table "active_storage_blobs", force: :cascade do |t|
+    t.text "key"
+    t.text "filename"
+    t.text "content_type"
+    t.text "metadata"
+    t.text "service_name"
+    t.bigint "byte_size"
+    t.text "checksum"
+    t.timestamptz "created_at"
+    t.index ["key"], name: "idx_16634_index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "active_storage_variant_records", force: :cascade do |t|
+    t.bigint "blob_id"
+    t.text "variation_digest"
+    t.index ["blob_id", "variation_digest"], name: "idx_16652_index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "api_request_logs", force: :cascade do |t|
+    t.bigint "nobservations"
+    t.bigint "data_source_id"
+    t.bigint "ncreates"
+    t.bigint "ncreates_failed"
+    t.bigint "nupdates"
+    t.bigint "nupdates_no_change"
+    t.bigint "nupdates_failed"
+    t.timestamptz "created_at"
+    t.timestamptz "updated_at"
+    t.bigint "job_id"
+  end
+
+  create_table "banner_messages", force: :cascade do |t|
+    t.string "message"
+    t.string "background_colour", default: "#dc3545"
+    t.string "text_colour", default: "#ffffff"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "online", default: true
+  end
+
+  create_table "constants", force: :cascade do |t|
+    t.string "name"
+    t.float "value", default: 0.0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "text_value"
+  end
+
+  create_table "contests", force: :cascade do |t|
+    t.bigint "user_id"
+    t.text "title"
+    t.text "description"
+    t.timestamptz "starts_at"
+    t.timestamptz "ends_at"
+    t.bigint "status", default: 0
+    t.timestamptz "created_at"
+    t.timestamptz "updated_at"
+    t.bigint "identifications_count", default: 0
+    t.bigint "species_count", default: 0
+    t.datetime "final_at", precision: nil
+    t.datetime "last_submission_accepted_at", precision: nil
+    t.datetime "utc_starts_at", precision: nil
+    t.datetime "utc_ends_at", precision: nil
+    t.string "slug"
+    t.integer "observations_count", default: 0
+    t.integer "people_count", default: 0
+    t.integer "rank_regions_by", default: 0
+    t.float "physical_health_score", default: 0.0
+    t.float "mental_health_score", default: 0.0
+    t.float "bioscore", default: 0.0
+    t.boolean "fetch_neighboring_region_data", default: false, null: false
+    t.index ["slug"], name: "index_contests_on_slug"
+    t.index ["title"], name: "index_contests_on_title"
+  end
+
+  create_table "contests_observations", force: :cascade do |t|
+    t.bigint "contest_id"
+    t.bigint "observation_id"
+    t.timestamptz "created_at"
+    t.timestamptz "updated_at"
+    t.index ["contest_id", "observation_id"], name: "contests_observations_ukey", unique: true
+  end
+
+  create_table "contests_participations", force: :cascade do |t|
+    t.bigint "contest_id"
+    t.bigint "participation_id"
+    t.timestamptz "created_at"
+    t.timestamptz "updated_at"
+  end
+
+  create_table "data_sources", force: :cascade do |t|
+    t.text "name"
+    t.timestamptz "created_at"
+    t.timestamptz "updated_at"
+    t.string "type"
+  end
+
+  create_table "data_sources_participations", force: :cascade do |t|
+    t.bigint "participation_id"
+    t.bigint "data_source_id"
+    t.timestamptz "created_at"
+    t.timestamptz "updated_at"
+  end
+
+  create_table "delayed_jobs", force: :cascade do |t|
+    t.bigint "priority", default: 0
+    t.bigint "attempts", default: 0
+    t.text "handler"
+    t.text "last_error"
+    t.timestamptz "run_at"
+    t.timestamptz "locked_at"
+    t.timestamptz "failed_at"
+    t.text "locked_by"
+    t.text "queue"
+    t.timestamptz "created_at"
+    t.timestamptz "updated_at"
+    t.index ["priority", "run_at"], name: "idx_16768_delayed_jobs_priority"
+  end
+
+  create_table "observation_images", force: :cascade do |t|
+    t.integer "observation_id"
+    t.string "url"
+    t.string "url_thumbnail"
+    t.string "license_code"
+    t.string "attribution"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["observation_id"], name: "index_observation_images_on_observation_id"
+  end
+
+  create_table "observations", force: :cascade do |t|
+    t.float "lat"
+    t.float "lng"
+    t.bigint "data_source_id"
+    t.timestamptz "observed_at"
+    t.timestamptz "created_at"
+    t.timestamptz "updated_at"
+    t.text "unique_id"
+    t.string "scientific_name", default: "TBD"
+    t.text "common_name"
+    t.text "accepted_name"
+    t.bigint "identifications_count", default: 0
+    t.text "external_link"
+    t.text "creator_name"
+    t.datetime "last_submission_accepted_at", precision: nil
+    t.string "creator_id"
+    t.integer "observation_images_count", default: 0
+    t.text "search_text"
+    t.string "address"
+    t.bigint "taxonomy_id"
+    t.float "bioscore", default: 0.0
+    t.string "license_code"
+    t.index ["accepted_name"], name: "index_observations_on_accepted_name"
+    t.index ["creator_name"], name: "index_observations_on_creator_name"
+    t.index ["observed_at"], name: "index_observations_on_observed_at"
+    t.index ["scientific_name"], name: "index_observations_on_scientific_name"
+    t.index ["search_text"], name: "index_observations_on_search_text"
+    t.index ["taxonomy_id"], name: "index_observations_on_taxonomy_id"
+    t.index ["unique_id"], name: "index_observations_on_unique_id", unique: true
+  end
+
+  create_table "observations_participations", force: :cascade do |t|
+    t.bigint "observation_id"
+    t.bigint "participation_id"
+    t.timestamptz "created_at"
+    t.timestamptz "updated_at"
+    t.index ["participation_id", "observation_id"], name: "observations_participations_ukey", unique: true
+  end
+
+  create_table "observations_regions", force: :cascade do |t|
+    t.bigint "region_id"
+    t.bigint "observation_id"
+    t.timestamptz "created_at"
+    t.timestamptz "updated_at"
+    t.integer "data_source_id"
+    t.index ["data_source_id"], name: "index_observations_regions_on_data_source_id"
+    t.index ["region_id", "data_source_id"], name: "index_observations_regions_on_region_id_data_source_id"
+    t.index ["region_id", "observation_id", "data_source_id"], name: "observations_regions_ukey", unique: true
+    t.index ["region_id"], name: "index_observations_regions_on_region_id"
+  end
+
+  create_table "params", force: :cascade do |t|
+    t.bigint "contest_id"
+    t.bigint "data_source_id"
+    t.string "name", null: false
+    t.string "value", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["contest_id"], name: "index_params_on_contest_id"
+    t.index ["data_source_id"], name: "index_params_on_data_source_id"
+  end
+
+  create_table "participations", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "region_id"
+    t.bigint "contest_id"
+    t.bigint "status", default: 0
+    t.timestamptz "created_at"
+    t.timestamptz "updated_at"
+    t.bigint "identifications_count", default: 0
+    t.bigint "species_count", default: 0
+    t.datetime "starts_at", precision: nil
+    t.datetime "ends_at", precision: nil
+    t.datetime "last_submission_accepted_at", precision: nil
+    t.integer "observations_count", default: 0
+    t.integer "people_count", default: 0
+    t.float "physical_health_score", default: 0.0
+    t.float "mental_health_score", default: 0.0
+    t.float "bioscore", default: 0.0
+    t.integer "base_participation_id"
+    t.index ["base_participation_id"], name: "index_participations_on_base_participation_id"
+  end
+
+  create_table "regions", force: :cascade do |t|
+    t.bigint "user_id"
+    t.text "name"
+    t.text "description"
+    t.string "raw_polygon_json", default: "[]"
+    t.text "region_url"
+    t.bigint "population"
+    t.text "header_image"
+    t.text "logo_image"
+    t.text "header_image_url"
+    t.text "logo_image_url"
+    t.bigint "status", default: 0
+    t.timestamptz "created_at"
+    t.timestamptz "updated_at"
+    t.bigint "inaturalist_place_id"
+    t.bigint "identifications_count", default: 0
+    t.bigint "species_count", default: 0
+    t.string "observation_dot_org_id"
+    t.integer "timezone_offset_mins", default: 0
+    t.string "slug"
+    t.integer "observations_count", default: 0
+    t.integer "people_count", default: 0
+    t.float "lat"
+    t.float "lng"
+    t.float "bioscore", default: 0.0
+    t.float "physical_health_score", default: 0.0
+    t.float "mental_health_score", default: 0.0
+    t.integer "parent_region_id"
+    t.integer "base_region_id"
+    t.float "size"
+    t.string "citsci_project_id"
+    t.float "bio_value", default: 0.0
+    t.float "species_diversity_score", default: 0.0
+    t.float "species_trend", default: 0.0
+    t.float "monitoring_score", default: 0.0
+    t.float "monitoring_trend", default: 0.0
+    t.float "community_score", default: 0.0
+    t.float "community_trend", default: 0.0
+    t.boolean "create_neighboring_region_subregions_for_ebird", default: false, null: false
+    t.boolean "fetch_neighboring_region_data", default: false, null: false
+    t.float "lat_input"
+    t.float "lng_input"
+    t.float "polygon_side_length"
+    t.string "subscription", default: "seeded"
+    t.boolean "display_flag", default: true, null: false
+    t.index ["base_region_id"], name: "index_regions_on_base_region_id"
+    t.index ["name"], name: "index_regions_on_name"
+    t.index ["slug"], name: "index_regions_on_slug"
+  end
+
+  create_table "subregions", force: :cascade do |t|
+    t.string "params_json", default: "{}"
+    t.integer "region_id"
+    t.integer "data_source_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.float "lat_min"
+    t.float "lat_max"
+    t.float "lng_min"
+    t.float "lng_max"
+    t.float "centre_lat"
+    t.float "centre_lng"
+    t.float "radius_km"
+    t.float "max_radius_km", default: 50.0
+    t.float "lat"
+    t.float "lng"
+    t.text "raw_polygon_json"
+    t.integer "parent_subregion_id"
+    t.integer "status", default: 0
+    t.integer "fetch_every", default: 0
+    t.integer "data_source_new_id"
+    t.index ["data_source_id"], name: "index_subregions_on_data_source_id"
+    t.index ["region_id"], name: "index_subregions_on_region_id"
+  end
+
+  create_table "taxonomies", force: :cascade do |t|
+    t.string "taxon_id", null: false
+    t.string "source", null: false
+    t.string "scientific_name"
+    t.string "canonical_name"
+    t.string "accepted_name"
+    t.string "generic_name"
+    t.string "accepted_name_usage_id"
+    t.string "kingdom"
+    t.string "phylum"
+    t.string "class_name"
+    t.string "taxonomic_status"
+    t.string "taxon_rank"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "order"
+    t.string "family"
+    t.string "genus"
+    t.index ["accepted_name_usage_id"], name: "index_taxonomies_on_accepted_name_usage_id"
+    t.index ["canonical_name"], name: "index_taxonomies_on_canonical_name"
+    t.index ["class_name"], name: "index_taxonomies_on_class_name"
+    t.index ["family"], name: "index_taxonomies_on_family"
+    t.index ["genus"], name: "index_taxonomies_on_genus"
+    t.index ["kingdom"], name: "index_taxonomies_on_kingdom"
+    t.index ["order"], name: "index_taxonomies_on_order"
+    t.index ["phylum"], name: "index_taxonomies_on_phylum"
+    t.index ["scientific_name"], name: "index_taxonomies_on_scientific_name"
+    t.index ["taxon_id", "source"], name: "taxon_id_source_ukey", unique: true
+    t.index ["taxon_id"], name: "index_taxonomies_on_taxon_id"
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.text "organization_name"
+    t.text "email"
+    t.bigint "role", default: 0
+    t.bigint "status", default: 0
+    t.text "login_code"
+    t.timestamptz "login_code_expires_at"
+    t.text "jwt_token"
+    t.text "password_digest"
+    t.bigint "login_attempts", default: 0
+    t.bigint "login_attempts_max", default: 5
+    t.timestamptz "created_at"
+    t.timestamptz "updated_at"
+  end
+
+  create_table "views", force: :cascade do |t|
+    t.bigint "article_id"
+    t.timestamptz "created_at"
+    t.timestamptz "updated_at"
+    t.bigint "user_id"
+  end
+
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id", name: "active_storage_attachments_blob_id_fkey"
+  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id", name: "active_storage_variant_records_blob_id_fkey"
+  add_foreign_key "observations", "taxonomies"
+  add_foreign_key "params", "contests"
+  add_foreign_key "params", "data_sources"
+  add_foreign_key "subregions", "data_sources", on_delete: :cascade
+  add_foreign_key "subregions", "regions", on_delete: :cascade
+end

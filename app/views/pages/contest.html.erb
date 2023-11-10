@@ -1,0 +1,65 @@
+
+<div class="row justify-content-center">
+  <div class="col-12 col-lg-10 d-flex justify-content-center proxima section-header h2 fw-bold text-dark text-center mt-5">
+    <%= @contest.title %>
+  </div>
+  <div class="row">
+    <div class="col d-flex justify-content-center fw-bold h6">
+      For observations made between <%= @contest.starts_at.strftime '%Y/%m/%d' %> and <%= @contest.ends_at.strftime '%Y/%m/%d' %>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col d-flex justify-content-center fs-italic h6">
+      Submissions accepted up to <%= @contest.last_submission_accepted_at.strftime '%Y/%m/%d' %>
+    </div>
+  </div>
+</div>
+
+<div class="row justify-content-center mt-3">
+  <div class="col-12 col-lg-6 d-flex justify-content-center h6">
+    <%= @contest.description %>
+  </div>
+</div>
+
+<div class="row justify-content-center">
+  <div class="col-10">
+    <div class="row my-3">
+      <div class="col" id="contest-map" style="width:100%; height:400px;"></div>  
+      <script>
+        var _region_polygons = [];<%#= JSON.generate(@contest.get_region_polygons).html_safe %>; 
+        var _participants = <%= JSON.generate(
+          @contest.regions.map { |r| 
+            { lat: r.lat, lng: r.lng , url: r.get_path, name: r.name} unless r.base_region_id.present?
+          }.compact.select{ |ll|
+            ll[:lat].present? && ll[:lng].present?
+          }
+        ).html_safe %>;
+      </script>        
+    </div>
+  </div>
+</div>
+
+<%= render partial: 'statistics', locals: { object: @contest } %>
+
+<% if @contest.regions.count>0 %>
+  <div class="row justify-content-center mt-5">
+    <div class="col-10">
+      <div class="row my-3">
+        <div class="col">
+          <div class="row">
+            <div class="col h4 text-center proxima section-header mb-3">Participating Regions</div>
+          </div>  
+          <div class="row">
+            <div class="col mt-5">
+              <% @contest.participations.base_region_participations.ordered_by_observations_count.each.with_index(1) do |p,i| %>
+                <%= render partial: 'region', locals: { r: p.region, i: i, observations_object: p, show_more_link: false } %>
+              <% end %>
+            </div>    
+          </div>
+        </div>      
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<%= render partial: 'recent_observations', locals: { observations: @observations, api_parameters: "?contest_id=#{ @contest.id }" } %>

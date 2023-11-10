@@ -1,0 +1,204 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, or any plugin's
+ * vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any other CSS/SCSS
+ * files in this directory. Styles in this file should be added after the last require_* statement.
+ * It is generally better to create a new file per style scope.
+ *
+ *= require_tree .
+ *= require_self
+ */
+
+
+
+* {
+  font-family: 'EB Garamond', serif;
+  border-radius: 0px;
+  line-height: 1em;
+  -webkit-text-size-adjust: 100%;
+}
+
+.proxima {
+  font-family: 'Montserrat', sans-serif;
+}  
+
+header {
+  /*background: url('https://biosmart-ui.s3.ap-southeast-2.amazonaws.com/background.jpeg') no-repeat center center / cover;*/
+  background: black;
+  color: white;
+}
+
+.marker_cluster {
+  background-color: rgba(239, 181, 74, 0.6);
+}
+
+.fw-home, .fw-header-link { font-size: 13px; font-weight: 300; letter-spacing: 2px; }
+.fw-home { font-size: 20px; }
+
+#footer-links a, #footer-links p, #footer-links, .footer-link { 
+  color: rgba(255,255,255,.4);
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 100;
+  letter-spacing: 0px;
+  line-height: 1.6em;
+}
+
+#footer-links p, #footer-links { text-align: center; white-space: pre-wrap; }
+#footer-links a { border-bottom: 1px solid rgba(255,255,255,.4); text-decoration: none; }
+
+#footer-links a:hover { color: white; border-color: white }
+
+.footer-link { color: rgb(225, 186, 71); border-bottom: 1px solid darkGrey; }
+
+.footer-link:hover { color: rgb(225, 186, 71); border-color: black; }
+
+
+.region-title-link, .contest-title-link { color: black; }
+.region-title-link:hover, .contest-title-link:hover { color: rgba(0,0,0,0.6); }
+
+
+.section-header { 
+  font-weight: 300;
+  text-transform: uppercase; 
+  letter-spacing: .3em;
+  line-height: 1.1em;
+}
+
+textarea { resize: none; }
+
+.validation-ok { color: white; display:none; }
+
+.fw-huge { font-size: 32px; }
+
+.card-overlay-opacity:hover { background-color: rgba(0,0,0,0.2); z-index: 1000; }
+
+.pagination a,  .pagination span.gap, .pagination span.current {
+  display: flex;
+  padding: 0 14px;
+  line-height: 30px;
+  text-decoration: none;
+  background-color: white;
+  border: 1px solid #DDD;
+  font-size: 14px;
+  font-weight: 600;
+  color: #616061;
+}
+
+.pagination a:hover { background-color: #e9e9e9; }
+
+.pagination span.current {
+  background-color: #ffc107;
+  border-color: #ffc107;
+}
+
+.slide {
+  background-color: #ffc107a5;
+  color: black;
+  text-decoration: none;
+  display: inline-block;
+  padding: 4px 8px;
+  margin-right: 4px;
+}
+
+a.slide:hover {
+  background-color: #e9e9e9;
+}
+
+.round {
+  border-radius: 10%;
+}
+
+img.thumbnail {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+}
+
+span.info_text {
+  font-weight:bold;
+}
+
+.yellow-font {
+  color: #e7ae04;
+}
+
+.blue-font {
+  // font-family:Verdana, Geneva, Tahoma, sans-serif;
+  color: #1c7fc1;
+}
+
+.cut-text {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+}
+
+.tooltip-pr {
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: all .5s ease;
+  padding-left: calc(var(--bs-gutter-x) * .5);
+}
+
+// .tooltip-pr:hover {
+//   cursor: pointer;
+//   height: 100%;
+//   overflow : "visible";
+//   white-space: initial;
+//   transition: height 0.2s ease-in-out;
+// }
+.region-link:link {
+  text-decoration : none;
+  color: #1c7fc1;
+}
+.region-link:active {
+  text-decoration : none;
+  color: #1c7fc1;
+}
+.region-link:visited {
+  text-decoration : none;
+  color: #1c7fc1;
+}
+.region-link:hover {
+  text-decoration : underline;
+  color: #1c7fc1;
+}
+.more-content {
+  text-decoration : none;
+}
+.header-col {
+  word-break: break-word;
+}
+input.ui-state-alert {
+  border: 1px inset #F00;
+}
+
+.datepicker {
+  // background: url('http://jqueryui.com/resources/demos/datepicker/images/calendar.gif') no-repeat;
+  padding: .375rem .75rem !important;
+  color: #212529;
+  background-color: #fff;
+  border: 1px solid #ced4da;
+  border-radius: .25rem;
+  font-size: 1rem;
+  font-weight: 400;
+  width: 80%;
+  line-height: 1.5;
+}
+.no-overlap {
+  z-index: 0 !important;
+}
+
+.multiselect-container {
+  width: 100% !important;
+}

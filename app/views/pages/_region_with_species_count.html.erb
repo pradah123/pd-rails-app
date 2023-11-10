@@ -1,0 +1,151 @@
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script>
+
+    function set_cookie(q, pathname) {
+        clear_search_cookie();
+        Cookies.set("pathname", pathname);
+        Cookies.set("q", q);
+        theCookies = document.cookie.split(';');
+    }
+
+    function theFunction (obj) {
+      var id = obj.id;
+      var r_id = id.match(/^[\d]+/);
+      $('#' + id).hide();
+
+      $('#' + r_id + "_description").css({
+        // "white-space": "normal",
+        // "overflow" : "visible"
+        "cursor": "pointer",
+        "height": "200px",
+        "white-space": "initial",
+        "transition": "height 0.2s ease-in-out"
+      });
+    }
+    if (document.getElementsByClassName("tooltip-pr")) {
+      var divs = document.getElementsByClassName("tooltip-pr");
+      for (var i=0; i < divs.length; i++) {
+        divs[i].addEventListener("mouseover", autoOver);
+        divs[i].addEventListener("mouseout", autoOut);
+      }
+    }
+    function autoOver() {
+      this.style.height = this.scrollHeight + "px";
+      this.style.paddingLeft = "calc(var(--bs-gutter-x) * .5)";
+      this.style.display = 'inline';
+    }
+    function autoOut() {
+      this.style.removeProperty('height');
+      this.style.display = "-webkit-box";
+      this.style.paddingLeft = "calc(var(--bs-gutter-x) * .5)";
+    }
+
+    $(document).ready(function() {
+      $.ajax({
+        url: "/api/v1/region/<%= r.id %>/sightings_count",
+        data: { month_filter: "<%= month_filter&.html_safe %>",
+                year_filter: "<%= year_filter&.html_safe %>",
+                search_text: "<%= search_text&.html_safe %>" },
+        cache: false,
+        dataType: 'json',
+        success: function(data){
+            text = data.property_sightings_count
+            if (text == 0) {
+              text = 'Be first to find!';
+            }
+            $("#<%= r.id %>_property_sightings").text(text);
+            $("#<%= r.id %>_locality_sightings").text(data.locality_sightings_count);
+            $("#<%= r.id %>_gr_sightings").text(data.greater_region_sightings_count);
+            $("#<%= r.id %>_total_sightings").text(data.total_sightings_count);
+        } 
+      });
+    });
+
+  </script>
+
+  <div class="row mb-5" id="searched_region" >
+
+  <% if search_text.present? %>
+    <div class="col-2 flex-nowrap flex-shrink-1 align-self-center text-center" style="padding: 1 0 0 0;">
+      <% species_image_url = RegionsObservationsMatview.get_species_image(region_id: r.id, search_text: search_text) %>
+      <% if species_image_url.present? %>
+        <a href="<%= species_image_url %>" target="_blank">
+          <img src="<%= species_image_url %>" style="height:150px;width:90%;object-fit:cover;">
+        </a>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="col-2 flex-nowrap flex-shrink-1 align-self-center text-center" style="padding: 1 0 0 0;">
+      <% if r.logo_image_url || r.logo_image %>
+        <% if r.region_url %>
+          <a href="<%= r.region_url %>" target="_blank">
+            <img src="<%= r.logo_image_url ? r.logo_image_url : r.logo_image %>" style="height:150px;width:90%;object-fit:contain;">
+          </a>
+        <% else %>
+          <img src="<%= r.logo_image_url ? r.logo_image_url : r.logo_image %>" style="height:150px;width:90%;object-fit:contain;">
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+  <div class="col-3 flex-nowrap flex-shrink-1" style="padding: 1 0 0 0; " >
+    <% if search_text.present? %>
+      <div class="row mt-2">
+        <div class="col-5" style="padding-right:1px;">
+          <% if r.logo_image_url || r.logo_image %>
+            <% if r.region_url %>
+              <a href="<%= r.region_url %>" target="_blank">
+                <img src="<%= r.logo_image_url ? r.logo_image_url : r.logo_image %>" class="float-start" style="height:75px;width:100%;object-fit:contain;">
+              </a>
+            <% else %>
+              <img src="<%= r.logo_image_url ? r.logo_image_url : r.logo_image %>" class="float-start" style="height:75px;width:100%;object-fit:contain;">
+            <% end %>
+          <% end %>
+        </div>
+        <div class="col-7 h5 blue-font fw-bold header-col" style="padding-left:10px;">
+          <a href="<%= r.get_path %>" class="region-link" onclick="set_cookie('<%= search_text %>', '<%= r.get_path %>');" target="_blank">
+            <%= r.name&.html_safe %>
+          </a>
+        </div>
+      </div>
+    <% else %>
+      <div class="row mt-2 h5 blue-font fw-bold header-col" style="padding-left:10px;">
+        <a href="<%= r.get_path %>" class="region-link" target="_blank">
+          <%= r.name&.html_safe %>
+        </a>
+      </div>
+    <% end %>
+    <div class="row mt-1 h6 fw-bold yellow-font tooltip-pr" id="<%= r.id %>_description">
+      <%= r.description&.html_safe || '' %>
+    </div>
+    <%
+=begin%>
+ <a class="more-content" href="#" id="<%= r.id %>_more_link" onclick="theFunction(this);" >
+      ...(more)
+    </a>
+<%
+=end%>
+  </div>
+  <% if search_text.present? %>
+    <div class="col-2 flex-nowrap flex-shrink-1 align-self-center text-center fw-bold h3 blue-font" style="padding: 1 0 0 0; " id="<%= r.id %>_total_sightings" >
+    </div>
+  <% else %>
+    <div class="col-2 flex-nowrap flex-shrink-1 align-self-center text-center h6 blue-font" style="padding: 1 0 0 0; " id="<%= r.id %>_total_sightings" >
+    </div>
+  <% end %>
+  <div class="col-1 flex-nowrap flex-shrink-1 align-self-center text-center h6 blue-font" style="padding: 1 0 0 0" id="<%= r.id %>_property_sightings" >
+  </div>
+  <div class="col-2 flex-nowrap flex-shrink-1 align-self-center text-center h6 blue-font" style="padding: 1 0 0 0" id="<%= r.id %>_locality_sightings" >
+  </div>
+  <div class="col-1 flex-nowrap flex-shrink-1 align-self-center text-center h6 blue-font" style="padding: 1 0 0 0;" id="<%= r.id %>_gr_sightings" >
+  </div>
+  <% if search_text.present? %>
+    <div class="col-1 flex-nowrap flex-shrink-1 align-self-center text-center h6 blue-font" style="padding: 1 0 0 0;" id="<%= r.id %>_bioscore">
+      <%= r.bioscore %>
+    </div>
+  <% else %>
+    <div class="col-1 flex-nowrap flex-shrink-1 align-self-center text-center fw-bold h3 blue-font" style="padding: 1 0 0 0;" id="<%= r.id %>_bioscore">
+      <%= r.bioscore %>
+    </div>
+  <% end %>
+</div>
+

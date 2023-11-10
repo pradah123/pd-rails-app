@@ -1,0 +1,31 @@
+{
+  "application.js": "/packs/js/application-dd30070657e74f8d01fd.js",
+  "application.js.map": "/packs/js/application-dd30070657e74f8d01fd.js.map",
+  "entrypoints": {
+    "application": {
+      "js": [
+        "/packs/js/application-dd30070657e74f8d01fd.js"
+      ],
+      "js.map": [
+        "/packs/js/application-dd30070657e74f8d01fd.js.map"
+      ]
+    },
+    "rails_admin": {
+      "js": [
+        "/packs/js/rails_admin-5c5170ee9eb04edcc2eb.js"
+      ],
+      "js.map": [
+        "/packs/js/rails_admin-5c5170ee9eb04edcc2eb.js.map"
+      ]
+    }
+  },
+  "media/webfonts/fa-solid-900.eot": "/packs/media/webfonts/fa-solid-900-9bbb245e.eot",
+  "media/webfonts/fa-solid-900.svg": "/packs/media/webfonts/fa-solid-900-7a8b4f13.svg",
+  "media/webfonts/fa-solid-900.ttf": "/packs/media/webfonts/fa-solid-900-be9ee23c.ttf",
+  "media/webfonts/fa-solid-900.woff": "/packs/media/webfonts/fa-solid-900-eeccf4f6.woff",
+  "media/webfonts/fa-solid-900.woff2": "/packs/media/webfonts/fa-solid-900-1551f4f6.woff2",
+  "rails_admin.js": "/packs/js/rails_admin-5c5170ee9eb04edcc2eb.js",
+  "rails_admin.js.map": "/packs/js/rails_admin-5c5170ee9eb04edcc2eb.js.map",
+  "vendors~actioncable.js": "/packs/js/vendors~actioncable-b44aad1ccb72633755ba.chunk.js",
+  "vendors~actioncable.js.map": "/packs/js/vendors~actioncable-b44aad1ccb72633755ba.chunk.js.map"
+}

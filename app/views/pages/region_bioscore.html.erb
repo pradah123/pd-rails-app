@@ -1,0 +1,380 @@
+<div class="row justify-content-center">
+  <div class="col-12 col-md-10">
+
+    <div class="row justify-content-left mb-4 flex-nowrap flex-shrink-1">
+      <div class="col-1 flex-nowrap flex-shrink-1"></div>
+      <div class="col-8 flex-nowrap flex-shrink-1 justify-content-center proxima section-header h2 fw-bold text-dark text-left mt-5">
+        <%= @region.name %>
+      </div>
+      <div class="col-2 p-1 mt-5 ml-1 justify-content-right flex-nowrap flex-shrink-1 border border-4 border-dark rounded-3 text-center bg-dark text-white h6 fs-italic">
+          <%= @region.bioscore %>
+        <br/>BioScore
+      </div>
+    </div>
+    <%  
+      constants = Constant.get_all_constants
+      intermediate_scores = @region.get_intermediate_scores
+      species_constant                     = constants[:species_constant] || 1
+      people_constant                      = constants[:people_constant] || 1
+      observations_constant                = constants[:observations_constant] || 1
+      species_per_observation_constant     = constants[:species_per_observation_constant] || 1
+      obs_per_person_constant              = constants[:observations_per_person_constant] || 1
+      avg_obs_score                        = constants[:average_observations_score] || 20
+      max_obs_score                        = constants[:max_observations_score] || 300
+      avg_obs_score_constant               = constants[:average_observations_score_constant] || 1
+      locality_obs_constant                = constants[:locality_observations_constant] || 1
+      locality_species_constant            = constants[:locality_species_constant] || 1
+      locality_people_constant             = constants[:locality_people_constant] || 1
+      greater_region_observations_constant = constants[:greater_region_observations_constant] || 1
+      greater_region_species_constant      = constants[:greater_region_species_constant] || 1
+      greater_region_people_constant       = constants[:greater_region_people_constant] || 1
+      current_year_observations_constant   = constants[:current_year_observations_constant] || 1
+      current_year_species_constant        = constants[:current_year_species_constant] || 1
+      current_year_people_constant         = constants[:current_year_people_constant] || 1
+      observations_trend_constant          = constants[:observations_trend_constant] || 1
+      species_trend_constant               = constants[:species_trend_constant] || 1
+      activity_trend_constant              = constants[:activity_trend_constant] || 1
+
+      obs = RegionsObservationsMatview.get_observations_for_region(region_id: @region.id)
+      observations = @region.get_observations_count(include_gbif: true)
+
+      species         = @region.get_species_count(include_gbif: true)
+      species_per_obs = observations.to_f.positive? ? species.to_f / observations.to_f : 0
+      people          = @region.get_people_count(include_gbif: true)
+      obs_per_person  = people.to_f.positive? ? observations.to_f / people.to_f : 0
+
+      avg_obs_score = 0 if !observations.to_i.positive?
+      bio_value     = obs.average(:bioscore) if observations.to_i.positive?
+      if !bio_value.present? || bio_value.zero? || (bio_value.present? && bio_value < avg_obs_score)
+        bio_value = avg_obs_score
+      elsif bio_value.present? && bio_value > max_obs_score
+        bio_value = max_obs_score
+      end
+      bio_value     = !bio_value.present? || bio_value.zero? ? avg_obs_score : bio_value
+
+      total_vs_locality_obs_score            = @region.get_regions_score(region_type: 'locality', score_type: 'observations_score').to_f / 100
+      total_vs_locality_species_score        = @region.get_regions_score(region_type: 'locality', score_type: 'species_score').to_f / 100
+      total_vs_locality_activity_score       = @region.get_regions_score(region_type: 'locality', score_type: 'people_score').to_f / 100
+      total_vs_greater_region_obs_score      = @region.get_regions_score(region_type: 'greater_region', score_type: 'observations_score').to_f / 100
+      total_vs_greater_region_species_score  = @region.get_regions_score(region_type: 'greater_region', score_type: 'species_score').to_f / 100
+      total_vs_greater_region_activity_score = @region.get_regions_score(region_type: 'greater_region', score_type: 'people_score').to_f / 100
+
+      yearly_vs_total_obs_score         = @region.get_yearly_score(score_type: 'observations_score', num_years: 1).to_f / 100
+      yearly_vs_total_species_score     = @region.get_yearly_score(score_type: 'species_score', num_years: 1).to_f / 100
+      yearly_vs_total_activity_score    = @region.get_yearly_score(score_type: 'people_score', num_years: 1).to_f / 100
+      bi_yearly_vs_total_obs_score      = @region.get_yearly_score(score_type: 'observations_score', num_years: 2).to_f / 100
+      bi_yearly_vs_total_species_score  = @region.get_yearly_score(score_type: 'species_score', num_years: 2).to_f / 100
+      bi_yearly_vs_total_activity_score = @region.get_yearly_score(score_type: 'people_score', num_years: 2).to_f / 100
+
+      obs_trend      = (bi_yearly_vs_total_obs_score.positive? ? (yearly_vs_total_obs_score - (bi_yearly_vs_total_obs_score/2))/ (bi_yearly_vs_total_obs_score/2) : 0)
+      species_trend  = (bi_yearly_vs_total_species_score.positive? ? (yearly_vs_total_species_score - (bi_yearly_vs_total_species_score/2))/ (bi_yearly_vs_total_species_score/2) : 0)
+      activity_trend = (bi_yearly_vs_total_activity_score.positive? ? (yearly_vs_total_activity_score - (bi_yearly_vs_total_activity_score/2))/ (bi_yearly_vs_total_activity_score/2) : 0)
+    %>
+    <div class="row justify-content-center mt-5">
+      <div class="col-10">
+        <div class="row justify-content-center text-left border border-1 rounded-1 p-2 flex-nowrap flex-shrink-1 bg-dark text-white">
+          <div class="col-10 text-center flex-nowrap flex-shrink-1 mb-2 mt-2 h5 fs-italic">BioScore Calculations </div>
+        </div>
+
+        <!-- Species Diversity Score Calculations-->
+        <div class="row justify-content-left text-left border border-1 rounded-1 p-2 flex-nowrap flex-shrink-1">
+          <div class="col-10 text-left flex-nowrap flex-shrink-1 h5 fs-italic">
+            Species Diversity Score (<%= sprintf('%.2f', intermediate_scores[:species_diversity_score]) %>)
+          </div>
+        </div>
+        <div class="row justify-content-left text-left border border-1 rounded-1 p-2 flex-nowrap flex-shrink-1">
+          <div class="col-8 text-left flex-nowrap flex-shrink-1">
+            (Species) * species_constant
+          </div>
+          <div class="col-2 text-left flex-nowrap flex-shrink-1">
+          <%= species %> * <%= species_constant %>
+          </div>
+          <div class="col-1 text-left flex-nowrap flex-shrink-1">
+            <strong><%= sprintf('%.2f', species * species_constant) %></strong>
+          </div>
+          <div class="col-1 text-center flex-nowrap flex-shrink-1"> <strong>+</strong></div>
+        </div>
+        <div class="row justify-content-left text-left border border-1 rounded-1 p-2 flex-nowrap flex-shrink-1">
+          <div class="col-8 text-left flex-nowrap flex-shrink-1">
+            (Species/Observations) * species_per_observation_constant
+          </div>
+          <div class="col-2 text-left flex-nowrap flex-shrink-1">
+          (<%= species %>/<%= observations %>) * <%= species_per_observation_constant %>
+          </div>
+          <div class="col-1 text-left flex-nowrap flex-shrink-1">
+            <strong><%= sprintf('%.2f', species_per_obs * species_per_observation_constant.to_f) %></strong>
+          </div>
+          <div class="col-1 text-center flex-nowrap flex-shrink-1"> <strong>+</strong></div>
+        </div>
+        <div class="row justify-content-left text-left border border-1 rounded-1 p-2 flex-nowrap flex-shrink-1">
+          <div class="col-8 text-left flex-nowrap flex-shrink-1">
+            (Total vs Locality Species Score) * locality_species_constant
+          </div>
+          <div class="col-2 text-left flex-nowrap flex-shrink-1">
+            <%= sprintf('%.2f', total_vs_locality_species_score) %> * <%= locality_species_constant %>
+          </div>
+          <div class="col-1 text-left flex-nowrap flex-shrink-1">
+            <strong><%= sprintf('%.2f', total_vs_locality_species_score * locality_species_constant.to_f) %></strong>
+          </div>
+          <div class="col-1 text-center flex-nowrap flex-shrink-1"> <strong>+</strong></div>
+        </div>
+        <div class="row justify-content-left text-left border border-1 rounded-1 p-2 flex-nowrap flex-shrink-1">
+          <div class="col-8 text-left flex-nowrap flex-shrink-1">
+            (Total vs Greater Region Species Score) * greater_region_species_constant
+          </div>
+          <div class="col-2 text-left flex-nowrap flex-shrink-1">
+            <%= sprintf('%.2f', total_vs_greater_region_species_score) %> * <%= greater_region_species_constant %>
+          </div>
+          <div class="col-1 text-left flex-nowrap flex-shrink-1">
+            <strong><%= sprintf('%.2f', total_vs_greater_region_species_score * greater_region_species_constant.to_f) %></strong>
+          </div>
+          <div class="col-1 text-center flex-nowrap flex-shrink-1"> <strong>+</strong></div>
+        </div>
+        <div class="row justify-content-left text-left border border-1 rounded-1 p-2 flex-nowrap flex-shrink-1">
+          <div class="col-8 text-left flex-nowrap flex-shrink-1">
+            (This Year vs Total Species Score) * current_year_species_constant
+          </div>
+          <div class="col-2 text-left flex-nowrap flex-shrink-1">
+            <%= sprintf('%.2f', yearly_vs_total_species_score) %> * <%= current_year_species_constant %>
+          </div>
+          <div class="col-1 text-left flex-nowrap flex-shrink-1">
+            <strong><%= sprintf('%.2f', yearly_vs_total_species_score * current_year_species_constant.to_f) %></strong>
+          </div>
+          <div class="col-1 text-center flex-nowrap flex-shrink-1"> <strong>+</strong></div>
+        </div>
+        <div class="row justify-content-left text-left border border-1 rounded-1 p-2 flex-nowrap flex-shrink-1">
+          <div class="col-8 text-left flex-nowrap flex-shrink-1">
+            (Last Two Years vs Total Species Score) * species_trend_constant
+          </div>
+          <div class="col-2 text-left flex-nowrap flex-shrink-1">
+            <%= sprintf('%.2f', bi_yearly_vs_total_species_score) %> * <%= species_trend_constant %>
+          </div>
+          <div class="col-1 text-left flex-nowrap flex-shrink-1">
+            <strong><%= sprintf('%.2f', bi_yearly_vs_total_species_score * species_trend_constant.to_f) %></strong>
+          </div>
+          <div class="col-1 text-center flex-nowrap flex-shrink-1"> <strong>+</strong></div>
+        </div>
+
+        <!-- Monitoring Score Calculations-->
+        <div class="row justify-content-left text-left border border-1 rounded-1 p-2 flex-nowrap flex-shrink-1">
+          <div class="col-10 text-left flex-nowrap flex-shrink-1 h5 fs-italic">
+            Monitoring Score (<%= sprintf('%.2f', intermediate_scores[:monitoring_score]) %>)
+          </div>
+        </div>
+        <div class="row justify-content-left text-left border border-1 rounded-1 p-2 flex-nowrap flex-shrink-1">
+          <div class="col-8 text-left flex-nowrap flex-shrink-1">
+            (Observations) * observations_constant
+          </div>
+          <div class="col-2 text-left flex-nowrap flex-shrink-1">
+          <%= observations %> * <%= observations_constant %>
+          </div>
+          <div class="col-1 text-left flex-nowrap flex-shrink-1">
+            <strong><%= sprintf('%.2f', observations * observations_constant) %></strong>
+          </div>
+          <div class="col-1 text-center flex-nowrap flex-shrink-1"> <strong>+</strong></div>
+        </div>
+        <div class="row justify-content-left text-left border border-1 rounded-1 p-2 flex-nowrap flex-shrink-1">
+          <div class="col-8 text-left flex-nowrap flex-shrink-1">
+            (Total vs Locality Observation Score) * locality_observations_constant
+          </div>
+          <div class="col-2 text-left flex-nowrap flex-shrink-1">
+            <%= sprintf('%.2f', total_vs_locality_obs_score) %> * <%= locality_obs_constant %>
+          </div>
+          <div class="col-1 text-left flex-nowrap flex-shrink-1">
+            <strong><%= sprintf('%.2f', total_vs_locality_obs_score * locality_obs_constant.to_f) %></strong>
+          </div>
+          <div class="col-1 text-center flex-nowrap flex-shrink-1"> <strong>+</strong></div>
+        </div>
+         <div class="row justify-content-left text-left border border-1 rounded-1 p-2 flex-nowrap flex-shrink-1">
+          <div class="col-8 text-left flex-nowrap flex-shrink-1">
+            (Total vs Greater Region Observation Score) * greater_region_observations_constant
+          </div>
+          <div class="col-2 text-left flex-nowrap flex-shrink-1">
+            <%= sprintf('%.2f', total_vs_greater_region_obs_score) %> * <%= greater_region_observations_constant %>
+          </div>
+          <div class="col-1 text-left flex-nowrap flex-shrink-1"> 
+            <strong><%= sprintf('%.2f', total_vs_greater_region_obs_score * greater_region_observations_constant.to_f) %></strong>
+          </div>
+          <div class="col-1 text-center flex-nowrap flex-shrink-1"> <strong>+</strong></div>
+        </div>
+        <div class="row justify-content-left text-left border border-1 rounded-1 p-2 flex-nowrap flex-shrink-1">
+          <div class="col-8 text-left flex-nowrap flex-shrink-1">
+            (This Year vs Total Observation Score) * current_year_observations_constant
+          </div>
+          <div class="col-2 text-left flex-nowrap flex-shrink-1">
+            <%= sprintf('%.2f', yearly_vs_total_obs_score) %> * <%= current_year_observations_constant %>
+          </div>
+          <div class="col-1 text-left flex-nowrap flex-shrink-1">
+            <strong><%= sprintf('%.2f', yearly_vs_total_obs_score * current_year_observations_constant.to_f) %></strong>
+          </div>
+          <div class="col-1 text-center flex-nowrap flex-shrink-1"> <strong>+</strong></div>
+        </div>
+        <div class="row justify-content-left text-left border border-1 rounded-1 p-2 flex-nowrap flex-shrink-1">
+          <div class="col-8 text-left flex-nowrap flex-shrink-1">
+            (Last Two Years vs Total Observation Score) * observations_trend_constant
+          </div>
+          <div class="col-2 text-left flex-nowrap flex-shrink-1">
+            <%= sprintf('%.2f', bi_yearly_vs_total_obs_score) %> * <%= observations_trend_constant %>
+          </div>
+          <div class="col-1 text-left flex-nowrap flex-shrink-1">
+            <strong><%= sprintf('%.2f', bi_yearly_vs_total_obs_score * observations_trend_constant.to_f) %></strong>
+          </div>
+          <div class="col-1 text-center flex-nowrap flex-shrink-1"> <strong>+</strong></div>
+        </div>
+
+        <!-- Community Score Calculations-->
+        <div class="row justify-content-left text-left border border-1 rounded-1 p-2 flex-nowrap flex-shrink-1">
+          <div class="col-10 text-left flex-nowrap flex-shrink-1 h5 fs-italic">
+            Community Score (<%= sprintf('%.2f', intermediate_scores[:community_score]) %>)
+          </div>
+        </div>
+        <div class="row justify-content-left text-left border border-1 rounded-1 p-2 flex-nowrap flex-shrink-1">
+          <div class="col-8 text-left flex-nowrap flex-shrink-1">
+            (People) * people_constant
+          </div>
+          <div class="col-2 text-left flex-nowrap flex-shrink-1">
+          <%= people %> * <%= people_constant %>
+          </div>
+          <div class="col-1 text-left flex-nowrap flex-shrink-1">
+            <strong><%= sprintf('%.2f', people * people_constant) %></strong>
+          </div>
+          <div class="col-1 text-center flex-nowrap flex-shrink-1"> <strong>+</strong></div>
+        </div>
+        <div class="row justify-content-left text-left border border-1 rounded-1 p-2 flex-nowrap flex-shrink-1">
+          <div class="col-8 text-left flex-nowrap flex-shrink-1">
+            (Observations/People) * observations_per_person_constant
+          </div>
+          <div class="col-2 text-left flex-nowrap flex-shrink-1">
+          (<%= observations %>/<%= people %>) * <%= obs_per_person_constant %>
+          </div>
+          <div class="col-1 text-left flex-nowrap flex-shrink-1">
+            <strong><%= sprintf('%.2f', obs_per_person * obs_per_person_constant.to_f) %></strong>
+          </div>
+          <div class="col-1 text-center flex-nowrap flex-shrink-1"> <strong>+</strong></div>
+        </div>
+        <div class="row justify-content-left text-left border border-1 rounded-1 p-2 flex-nowrap flex-shrink-1">
+          <div class="col-8 text-left flex-nowrap flex-shrink-1">
+            (Total vs Locality Activity Score) * locality_people_constant
+          </div>
+          <div class="col-2 text-left flex-nowrap flex-shrink-1">
+            <%= sprintf('%.2f', total_vs_locality_activity_score) %> * <%= locality_people_constant %>
+          </div>
+          <div class="col-1 text-left flex-nowrap flex-shrink-1">
+            <strong><%= sprintf('%.2f', total_vs_locality_activity_score * locality_people_constant.to_f) %></strong>
+          </div>
+          <div class="col-1 text-center flex-nowrap flex-shrink-1"> <strong>+</strong></div>
+        </div>
+        <div class="row justify-content-left text-left border border-1 rounded-1 p-2 flex-nowrap flex-shrink-1">
+          <div class="col-8 text-left flex-nowrap flex-shrink-1">
+            (Total vs Greater Region Activity Score) * greater_region_people_constant
+          </div>
+          <div class="col-2 text-left flex-nowrap flex-shrink-1">
+            <%= sprintf('%.2f', total_vs_greater_region_activity_score) %> * <%= greater_region_people_constant %>
+          </div>
+          <div class="col-1 text-left flex-nowrap flex-shrink-1">
+            <strong><%= sprintf('%.2f', total_vs_greater_region_activity_score * greater_region_people_constant.to_f) %></strong>
+          </div>
+          <div class="col-1 text-center flex-nowrap flex-shrink-1"> <strong>+</strong></div>
+        </div>
+        <div class="row justify-content-left text-left border border-1 rounded-1 p-2 flex-nowrap flex-shrink-1">
+          <div class="col-8 text-left flex-nowrap flex-shrink-1">
+            (This Year vs Total Activity Score) * current_year_people_constant
+          </div>
+          <div class="col-2 text-left flex-nowrap flex-shrink-1">
+            <%= sprintf('%.2f', yearly_vs_total_activity_score) %> * <%= current_year_people_constant %>
+          </div>
+          <div class="col-1 text-left flex-nowrap flex-shrink-1">
+            <strong><%= sprintf('%.2f', yearly_vs_total_activity_score * current_year_people_constant.to_f) %></strong>
+          </div>
+          <div class="col-1 text-center flex-nowrap flex-shrink-1"> <strong>+</strong></div>
+        </div>
+        <div class="row justify-content-left text-left border border-1 rounded-1 p-2 flex-nowrap flex-shrink-1">
+          <div class="col-8 text-left flex-nowrap flex-shrink-1">
+            (Last Two Years vs Total Activity Score) * activity_trend_constant
+          </div>
+          <div class="col-2 text-left flex-nowrap flex-shrink-1">
+            <%= sprintf('%.2f', bi_yearly_vs_total_activity_score) %> * <%= activity_trend_constant %>
+          </div>
+          <div class="col-1 text-left flex-nowrap flex-shrink-1">
+            <strong><%= sprintf('%.2f', bi_yearly_vs_total_activity_score * activity_trend_constant.to_f) %></strong>
+          </div>
+          <div class="col-1 text-center flex-nowrap flex-shrink-1"> <strong>+</strong></div>
+        </div>
+
+        <!-- Biovalue Calculations-->
+        <div class="row justify-content-left text-left border border-1 rounded-1 p-2 flex-nowrap flex-shrink-1">
+          <div class="col-10 text-left flex-nowrap flex-shrink-1 h5 fs-italic">
+            Biovalue (<%= sprintf('%.2f', intermediate_scores[:bio_value]) %>)
+          </div>
+        </div>
+        <div class="row justify-content-left text-left border border-1 rounded-1 p-2 flex-nowrap flex-shrink-1">
+          <div class="col-8 text-left flex-nowrap flex-shrink-1">
+            (Average of Observations bioscore or Average observations score defined in Constant or 20) * average_observations_score_constant
+            </br>* This will be considered 0 if Observations are 0
+          </div>
+          <div class="col-2 text-left flex-nowrap flex-shrink-1">
+            <%= sprintf('%.2f', bio_value) %> * <%= avg_obs_score_constant %>
+          </div>
+          <div class="col-1 text-left flex-nowrap flex-shrink-1">
+            <strong><%= sprintf('%.2f', bio_value * avg_obs_score_constant.to_f) %></strong>
+          </div>
+          <div class="col-1 text-center flex-nowrap flex-shrink-1"> <strong>+</strong></div>
+        </div>
+
+        <!-- Trends Calculations-->
+        <div class="row justify-content-left text-left border border-1 rounded-1 p-2 flex-nowrap flex-shrink-1">
+          <div class="col-10 text-left flex-nowrap flex-shrink-1 h5 fs-italic">
+            Trends (<%= sprintf('%.2f', (obs_trend * observations_trend_constant.to_f) + 
+                       (species_trend * species_trend_constant.to_f) + 
+                       (activity_trend * activity_trend_constant.to_f))%>)
+          </div>
+        </div>
+        <div class="row justify-content-left text-left border border-1 rounded-1 p-2 flex-nowrap flex-shrink-1">
+          <div class="col-8 text-left flex-nowrap flex-shrink-1">
+            <strong>Observation Trend</strong>
+            </br>( (This Year vs Total Observation Score - (Last Two Years vs Total Observation Score/2)) / 
+            (Last Two Years vs Total Observation Score/2) ) * observations_trend_constant
+          </div>
+          <div class="col-2 text-left flex-nowrap flex-shrink-1">
+            ( (<%= sprintf('%.2f', yearly_vs_total_obs_score) %> - (<%= sprintf('%.2f', bi_yearly_vs_total_obs_score) %>/2)) /
+            (<%= sprintf('%.2f', bi_yearly_vs_total_obs_score) %>/2) ) * <%= observations_trend_constant %>
+          </div>
+          <div class="col-1 text-left flex-nowrap flex-shrink-1">
+            <strong><%= sprintf('%.2f', obs_trend * observations_trend_constant.to_f) %></strong>
+          </div>
+          <div class="col-1 text-center flex-nowrap flex-shrink-1"> <strong>+</strong></div>
+        </div>
+        <div class="row justify-content-left text-left border border-1 rounded-1 p-2 flex-nowrap flex-shrink-1">
+          <div class="col-8 text-left flex-nowrap flex-shrink-1">
+            <strong>Species Trend</strong>
+            </br>( (This Year vs Total Species Score - (Last Two Years vs Total Species Score/2)) / 
+            (Last Two Years vs Total Species Score/2) ) * species_trend_constant
+          </div>
+          <div class="col-2 text-left flex-nowrap flex-shrink-1">
+            ( (<%= sprintf('%.2f', yearly_vs_total_species_score) %> - (<%= sprintf('%.2f', bi_yearly_vs_total_species_score) %>/2)) /
+            (<%= sprintf('%.2f', bi_yearly_vs_total_species_score) %>/2) ) * <%= species_trend_constant %>
+          </div>
+          <div class="col-1 text-left flex-nowrap flex-shrink-1">
+            <strong><%= sprintf('%.2f', species_trend * species_trend_constant.to_f) %></strong>
+          </div>
+          <div class="col-1 text-center flex-nowrap flex-shrink-1"> <strong>+</strong></div>
+        </div>
+        <div class="row justify-content-left text-left border border-1 rounded-1 p-2 flex-nowrap flex-shrink-1">
+          <div class="col-8 text-left flex-nowrap flex-shrink-1">
+            <strong>Activity Trend</strong>
+            </br>( (This Year vs Total Activity Score - (Last Two Years vs Total Activity Score/2)) / 
+            (Last Two Years vs Total Activity Score/2) ) * activity_trend_constant
+          </div>
+          <div class="col-2 text-left flex-nowrap flex-shrink-1">
+            ( (<%= sprintf('%.2f', yearly_vs_total_activity_score) %> - (<%= sprintf('%.2f', bi_yearly_vs_total_activity_score) %>/2)) /
+            (<%= sprintf('%.2f', bi_yearly_vs_total_activity_score) %>/2) ) * <%= activity_trend_constant %>
+          </div>
+          <div class="col-1 text-left flex-nowrap flex-shrink-1">
+            <strong><%= sprintf('%.2f', activity_trend * activity_trend_constant.to_f) %></strong>
+          </div>
+          <div class="col-1 text-center flex-nowrap flex-shrink-1"> </div>
+        </div>
+      </div>
+    </div>
+  </div>  
+</div>

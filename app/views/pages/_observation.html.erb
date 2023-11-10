@@ -1,0 +1,13 @@
+<div class="col-6 col-lg-4 observation">
+  <div class="card m-2" style="height:370px;">    
+    <div class="card-body observation-image" style="height: 200px; background-color: lightGrey; <% if o.observation_images_count>0 %>background: url('<%= o.observation_images.first.url %>') no-repeat center center / cover;<% end %>">
+    </div>
+    <div class="card-body">  
+      <h5 class="card-title w-100 text-center text-dark fw-bold scientific_name"><%= o.scientific_name %></h5>
+      <div class="card-title w-100 text-center text-muted h6 creator_name"><%= o.creator_name.nil? ? '' : o.creator_name %></div>
+      <div class="card-title w-100 text-center text-muted h6 observed_at"><%= o.observed_at.strftime '%Y-%m-%d %H:%M' %> UTC</div>
+    </div>
+    <div class="card-img-overlay h-100 d-flex flex-column justify-content-end gallery-link card-overlay-opacity" role="button" data-image-urls='<%= o.observation_images.pluck(:url) %>'>
+    </div>
+  </div>
+</div> 

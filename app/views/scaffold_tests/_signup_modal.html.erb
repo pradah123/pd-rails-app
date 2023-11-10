@@ -1,0 +1,56 @@
+<div class="modal fade signup-modal" tabindex="-1" id="<%= id %>">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">        
+        <h4 class="modal-title fw-heavy"><%= title %></h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row justify-content-center mt-5 mb-3">
+          <div class="col-8">
+            <div class="form-group">
+              <input type="text" class="form-control organization_name" placeholder="Organization Name" required="required">
+            </div>
+          </div>
+        </div>  
+        <div class="row justify-content-center mb-3">
+          <div class="col-8">
+            <div class="form-group">
+              <input type="email" class="form-control email" placeholder="Email" required="required">
+            </div>
+          </div>
+        </div>          
+        <div class="row justify-content-center mb-3">
+          <div class="col-8">
+            <div class="form-group">
+              <input type="password" class="form-control password" placeholder="Password" required="required">
+            </div>
+          </div>    
+        </div>
+        <div class="row justify-content-center mb-5">
+          <div class="col-8">            
+            <div class="form-group">
+              <button class="btn btn-outline-secondary w-100" id="<%= id %>_action" disabled><%= button_text %></button>
+            </div>
+          </div>
+        </div>    
+        <div class="row justify-content-center mb-3">
+          <div class="col-8 validation-messages">            
+            <span class="text-danger validation-ok organization_name_unique">Organization name is already taken.</span>
+            <span class="text-danger validation-ok email_unique">Email is already taken.</span>
+            <span class="text-danger validation-ok organization_name_v">Organization name is required.</span>
+            <span class="text-danger validation-ok email_v">Email is required.</span>
+            <span class="text-danger validation-ok password_v">Password must be at least 6 characters long.</span>
+          </div>
+        </div>                
+      </div>
+      <div class="modal-footer">
+        <% if include_login_link==true %>
+          <a class="btn black text-decoration-underline" id="already_have_an_account">I already have an account</a>
+        <% else %>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>  
+        <% end %>  
+      </div>
+    </div>
+  </div>
+</div>

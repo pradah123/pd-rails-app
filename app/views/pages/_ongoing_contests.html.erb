@@ -1,0 +1,8 @@
+<script>
+  <% if show_more_contests == false %>
+    $('.show_more_contests').hide();
+  <% end %>
+</script>
+<% contests.each.with_index(1) do |c,i| %>
+  <%= render partial: 'contest_top_page', locals: { c: c, i: i, observations_object: c, show_more_link: false } %>
+<% end %>

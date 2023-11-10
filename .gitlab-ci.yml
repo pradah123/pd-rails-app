@@ -1,0 +1,58 @@
+image: ruby:3.0.2
+
+stages:
+    - deploy
+
+staging:
+    stage: deploy
+    environment:
+        name: staging
+        url: https://$STAGING_HOST
+    before_script:
+        - "which ssh-agent || ( apt-get update -y && apt-get install openssh-client git -y )"
+        - eval $(ssh-agent -s)
+        - echo "$DEPLOY_PRIVATE_KEY" | base64 -d | ssh-add -
+        - mkdir -p ~/.ssh
+        - chmod 700 ~/.ssh
+        - ssh-keyscan $STAGING_HOST >> ~/.ssh/known_hosts
+        - chmod 644 ~/.ssh/known_hosts
+        - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+        - git config --global user.email "priyankgt@gmail.com"
+        - git config --global user.name "Priyank"
+        - gem install capistrano
+        - gem install capistrano-bundler
+        - gem install capistrano-rails
+        - gem install capistrano-rvm
+        - gem install capistrano3-puma
+        # - gem install capistrano3-delayed-job -v '~> 1.0'
+    script:
+        - cap staging deploy
+    only:
+        - main
+
+production:
+    stage: deploy
+    environment:
+        name: production
+        url: https://$PRODUCTION_HOST
+    before_script:
+        - "which ssh-agent || ( apt-get update -y && apt-get install openssh-client git -y )"
+        - eval $(ssh-agent -s)
+        - echo "$DEPLOY_PRIVATE_KEY" | base64 -d | ssh-add -
+        - mkdir -p ~/.ssh
+        - chmod 700 ~/.ssh
+        - ssh-keyscan $PRODUCTION_HOST >> ~/.ssh/known_hosts
+        - chmod 644 ~/.ssh/known_hosts
+        - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+        - git config --global user.email "priyankgt@gmail.com"
+        - git config --global user.name "Priyank"
+        - gem install capistrano
+        - gem install capistrano-bundler
+        - gem install capistrano-rails
+        - gem install capistrano-rvm
+        - gem install capistrano3-puma
+        # - gem install capistrano3-delayed-job -v '~> 1.0'
+    script:
+        - cap production deploy
+    only:
+        - prod

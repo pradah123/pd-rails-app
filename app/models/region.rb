@@ -1,0 +1,992 @@
+require_relative '../../lib/region/neighboring_region.rb'
+require_relative '../../lib/common/file_operations.rb'
+require_relative '../../lib/common/aws_operations.rb'
+
+require 'date'
+
+class Region < ApplicationRecord
+  include CountableStatistics
+  
+  scope :recent, -> { order created_at: :desc }
+  scope :online, -> { where status: Region.statuses[:online] }
+  scope :parent_region, -> { where parent_region_id: nil }
+
+  belongs_to :user, optional: true
+
+  #
+  # parent regions may have no polygons themselves, but have many
+  # child regions, referenced through the key parent_region_id.
+  #
+  # eg. a parent region may be australia, which has child regions, one for
+  # each province. the provinces would each have the parent_region_id set to
+  # the region id for australia.
+  #
+
+  belongs_to :parent_region, class_name: 'Region', optional: true
+  has_many :child_regions, class_name: 'Region', foreign_key: 'parent_region_id'
+  has_many :participations, dependent: :delete_all
+  has_many :subregions, dependent: :delete_all
+  has_many :neighboring_regions, class_name: 'Region', foreign_key: 'base_region_id', dependent: :delete_all
+  has_many :contests, through: :participations
+  has_and_belongs_to_many :observations
+ 
+  #
+  # subregions are used in fetching data when the region size is too large
+  # for one api call to cover
+  #
+  after_create :set_raw_polygon_json
+  after_create :compute_subregions, :set_lat_lng, :compute_neighboring_regions
+  after_update :set_raw_polygon_json
+  after_update :compute_subregions, :set_lat_lng, if: :saved_change_to_raw_polygon_json
+  after_update :compute_neighboring_regions, if: -> {:saved_change_to_raw_polygon_json || :saved_change_to_name }
+  after_update :update_neighboring_region, if: :saved_change_to_size
+
+  #
+  # the timezone of the centre point of the region is found using a google
+  # api. this is used in working out the utc date times in this region for a contest
+  #
+  after_save :set_time_zone_from_polygon, if: :saved_change_to_raw_polygon_json
+  after_save :set_slug, if: :saved_change_to_name
+  #after_save :update_logo_image, if: lambda {|r| r.saved_change_to_logo_image_url? || r.saved_change_to_logo_image? }
+  #after_save :update_header_image, if: lambda {|r| r.saved_change_to_header_image_url? || r.saved_change_to_header_image? }
+
+  #
+  # polygon computations are required to decide if an observation lies inside this
+  # region. geokit polygons are used to acheive this, and since they are reused 
+  # many times, the geokit polygon objects are cached.
+  #
+  after_save :update_polygon_cache, :set_time_zone_from_polygon
+
+  enum status: [:online, :offline, :deleted]
+
+  paginates_per 25
+
+
+  #
+  # the slug is used to identify a region from its url.
+  #
+
+  def set_slug
+    slug = name.blank? ? SecureRandom.hex(8) : name.downcase.gsub(/[^[:word:]\s]/, '').gsub(/ /, '-')
+    slug += '1' if ['contest'].include?(slug) || Region.all.where(slug: slug).count > 0
+    update_column :slug, slug
+  end
+
+  def get_path
+    "/#{slug}"
+  end  
+
+  def get_region_contest_path contest
+    "/#{slug}/#{contest.slug}/"
+  end  
+
+  def get_child_region_polygons
+    child_regions.map { |r| JSON.parse r.raw_polygon_json }.flatten.map { |p| p.to_hash }
+  end  
+
+  def self.get_all_regions
+    arr = Region.where(base_region_id: nil).where.not(lat: nil, lng: nil).map { |r| { name: r.name, url: r.get_path, lat: r.lat, lng: r.lng } }
+    arr
+  end  
+
+
+  def set_raw_polygon_json
+    if ((!saved_change_to_raw_polygon_json  &&
+       (saved_change_to_lat_input || saved_change_to_lng_input ||
+       saved_change_to_polygon_side_length) && lat_input && lng_input && polygon_side_length) ||
+       (saved_change_to_raw_polygon_json && raw_polygon_json == "[]" && lat_input &&
+       lng_input && polygon_side_length))
+      polygon_radius = Utils.get_polygon_radius(polygon_side_length)
+      polygon = Utils.get_polygon_from_lat_lng(lat_input, lng_input, polygon_radius)
+      update_column :raw_polygon_json, "[#{polygon.to_json}]"
+      compute_subregions()
+      set_lat_lng()
+    end
+  end
+
+  def set_lat_lng
+    #
+    # get the centre of the polygons
+    #
+
+    polygons = JSON.parse raw_polygon_json
+    lat_centre = 0
+    lng_centre = 0
+    n = 0
+    polygons.each do |p|
+      lng_centre += p['coordinates'].map { |c| c[0] }.sum
+      lat_centre += p['coordinates'].map { |c| c[1] }.sum
+      n += p['coordinates'].length
+    end
+    return if n==0
+ 
+    lat_centre /= n
+    lng_centre /= n
+
+    update_column :lat, lat_centre
+    update_column :lng, lng_centre
+  end
+
+  def set_polygon_area(polygon_area)
+    update_column :polygon_area, polygon_area
+  end
+
+
+  def set_time_zone_from_polygon
+    #
+    # https://developers.google.com/maps/documentation/timezone/get-started#maps_http_timezone-rb
+    # use api from here to get the timezone offset of this lat,lng in minutes
+    #
+
+    unless self.lat.nil? || self.lng.nil?
+      google_api_key = "AIzaSyBFT4VgTIfuHfrL1YYAdMIUEusxzx9jxAQ"
+      url = "https://maps.googleapis.com/maps/api/timezone/json?location=#{self.lng}%2C#{self.lat}&timestamp=#{Time.now.to_i}&key=#{google_api_key}"
+      offset_mins = 0
+      begin
+        response = HTTParty.get url
+        response_json = JSON.parse response.body
+        offset_mins = response_json['rawOffset']
+        update_column :timezone_offset_mins, (offset_mins/60)
+        participations.each { |p| p.set_start_and_end_times }
+      rescue => e
+        Rails.logger.error "google api failed for lat,lng = #{lat},#{lng}" 
+      end
+    end
+
+  end
+
+
+
+
+
+  def compute_subregions
+    subregions.delete_all
+    polygons = JSON.parse raw_polygon_json
+
+    # 
+    #  make subregions for all possible data sources- we only need to do this once
+    #  and the data can be reused when required
+    #
+    #  for an object s of type Subregion, the query parameters can 
+    #  be accessed at s.get_query_parameters
+    #
+
+    polygons.each do |p|
+      #{}if !size.present? && !base_region_id.present?
+        # inaturalist subregion has no limit on the radius
+        Subregion.create! data_source_id: DataSource.find_by_name('inaturalist').id, region_id: self.id, raw_polygon_json: p.to_json, max_radius_km: nil
+
+        # ebird subregions have default 50 km max radius
+        #Subregion.create! data_source_id: DataSource.find_by_name('ebird').id, region_id: self.id, raw_polygon_json: p.to_json
+
+        # observation.org does not need a radius- but will use the observation_dot_org_id from the region
+        Subregion.create! data_source_id: DataSource.find_by_name('observation.org').id, region_id: self.id, raw_polygon_json: '{}'
+
+        # questagame does not need a radius- but will use polygon in multipolygon db query format
+        Subregion.create! data_source_id: DataSource.find_by_name('qgame').id, region_id: self.id, raw_polygon_json: p.to_json, max_radius_km: nil
+
+        # mushroom observer needs north, south, east, west
+        Subregion.create! data_source_id: DataSource.find_by_name('mushroom_observer').id, region_id: self.id, raw_polygon_json: p.to_json, max_radius_km: nil
+
+        # Naturespot needs north, south, east, west
+        Subregion.create! data_source_id: DataSource.find_by_name('naturespot').id, region_id: self.id, raw_polygon_json: p.to_json, max_radius_km: nil
+        
+        # CitSci does not need a polygon- but will use the project_id from the params
+        Subregion.create! data_source_id: DataSource.find_by_name('citsci').id, region_id: self.id, raw_polygon_json: '{}'
+
+      #{}end
+      # gbif needs polygon
+      Subregion.create! data_source_id: DataSource.find_by_name('gbif').id, region_id: self.id, raw_polygon_json: p.to_json, max_radius_km: nil
+
+    end
+  end
+
+  # Add or update neighbor regions for the base region
+  def compute_neighboring_regions
+    return if size.present? || base_region_id.present?
+    
+    locality_size = get_neighboring_region(region_type: 'locality')&.size || 5
+    greater_region_size = get_neighboring_region(region_type: 'greater_region')&.size || 12.5
+
+    # Create or update locality
+    nr_locality = NeighboringRegion.new(self, nil, locality_size)
+    r_locality = nr_locality.get_region()
+    # https://apidock.com/rails/ActiveRecord/Base/save
+    r_locality.save
+
+    # Create or update greater region
+    nr_greater_region = NeighboringRegion.new(self, nil, greater_region_size)
+    r_greater_region = nr_greater_region.get_region()
+    r_greater_region.save
+
+    # Fetch and store observations for greater region
+    #GbifObservationsFetchJob.perform_later(greater_region_id: r_greater_region.id) if saved_change_to_raw_polygon_json
+  end
+
+
+  def update_neighboring_region()
+    base_region = Region.find_by_id(self.base_region_id)
+    nr = NeighboringRegion.new(base_region, self, saved_change_to_size[1])
+    nr = nr.get_region()
+    nr.save
+
+    # Will add this later
+    #GbifObservationsDeleteJob.perform_later(region_id: nr.id)
+  end
+
+  #
+  #  polygon caching and computation functions,
+  #  all based around geokit polygon objects.
+  #
+
+  @@polygons_cache = {}
+
+  def update_polygon_cache
+    get_geokit_polygons true
+  end  
+
+  def get_geokit_polygons update_polygons=false
+    key = "r#{id}"
+
+    if @@polygons_cache[key].nil? || update_polygons==true
+      polygons = []
+      begin
+        json = JSON.parse raw_polygon_json
+        if json
+          json.each do |polygon|
+            points = polygon['coordinates'].map { |c| Geokit::LatLng.new c[1], c[0] }
+            polygons.push Geokit::Polygon.new(points)
+          end
+        end
+      rescue
+      end
+      @@polygons_cache[key] = polygons
+    end
+
+    @@polygons_cache[key]
+  end
+
+  def update_logo_image
+    if base_region_id.nil?
+      logo_file_name = "region_#{self.id}_logo"
+
+      # Rails.logger.info("logo_image: #{logo_image}")
+      Rails.logger.info("logo_image_url: #{logo_image_url}")
+      Rails.logger.info "logo_image_url_changed : #{saved_change_to_logo_image_url?} || :logo_image_changed : #{saved_change_to_logo_image?}"
+      if !logo_image_url.nil? && !logo_image_url.blank?
+        Rails.logger.info("Inside logo_image_url")
+        logo_image_path = FileOperations.download_image(logo_file_name, logo_image_url)
+      elsif !logo_image.nil? && !logo_image.blank?
+        Rails.logger.info("Inside logo_image")
+        logo_image_path = save_img(logo_image, logo_file_name)
+      end
+      if logo_image_path
+        logo_thumbnail = "#{logo_file_name}_thumbnail"
+        logo_thumbnail_path = FileOperations.save_thumbnail_image(logo_image_path, logo_thumbnail)
+        # Save logo and thumbnail files to S3
+        client = AWSOperations.get_s3_client
+        if client
+          AWSOperations.aws_s3_file_upload(client, logo_image_path, "region-logos/" )
+          AWSOperations.aws_s3_file_upload(client, logo_thumbnail_path, "region-logos/" ) if logo_thumbnail_path
+          # TBD: Update S3 file locations to regions schema
+          # https://biosmart-ui.s3.ap-southeast-2.amazonaws.com/region-logos/region_441_logo.png
+        end
+      else
+        Rails.logger.info("No logo image to upload on S3 ")
+      end
+    end
+  end
+
+  def update_header_image
+    if base_region_id.nil?
+      Rails.logger.info("change in header image #{saved_change_to_header_image}, #{saved_change_to_header_image_url}")
+      header_file_name = "region_#{self.id}_header"
+      if !header_image_url.nil? && !header_image_url.blank?
+        Rails.logger.info("Inside header_image_url")
+        header_image_path = FileOperations.download_image(header_file_name, header_image_url)
+      elsif !header_image.nil? && !header_image.blank?
+        Rails.logger.info("Inside header_image")
+        header_image_path = save_img(header_image, header_file_name)
+      end
+      Rails.logger.info "header_image_path: #{header_image_path}"
+      if header_image_path
+        header_thumbnail = "#{header_file_name}_thumbnail"
+        header_thumbnail_path = FileOperations.save_thumbnail_image(header_image_path, header_thumbnail)
+        # Save header and thumbnail files to S3
+        client = AWSOperations.get_s3_client
+        if client
+          AWSOperations.aws_s3_file_upload(client, header_image_path, "region-headers/" )
+          AWSOperations.aws_s3_file_upload(client, header_thumbnail_path, "region-headers/" ) if header_thumbnail_path
+          # TBD: Update S3 file locations to regions schema
+        end
+      else
+        Rails.logger.info("No header image to upload on S3 ")
+      end
+    end
+    # region_id = self.id
+    # url = self.header_image_url
+    # header_file_name = "region_#{self.id}_header"
+    # header_image_path = FileOperations.download_image(header_file_name, url)
+    # if header_image_path
+    #   header_thumbnail = "region_#{self.id}_header_thumbnail"
+    #   header_thumbnail_path = FileOperations.save_thumbnail_image(header_image_path, header_thumbnail)
+    # end
+  end
+
+  def contains? lat, lng
+    get_geokit_polygons.each { |polygon| return true if polygon.contains?(Geokit::LatLng.new lat, lng) }
+    return false    
+  end
+
+  # Conversion code from geojson polygon format to polygon db query format(wkt format).
+  def self.get_polygon_from_raw_polygon_json raw_polygon_json
+    polygon_geojson = JSON.parse raw_polygon_json
+    polygon_geojson = [polygon_geojson] unless polygon_geojson.kind_of?(Array)
+
+    polygon_strings = []
+    polygon_geojson.each do |rpj|
+      if rpj['coordinates'].present? && rpj['coordinates'][0].join != rpj['coordinates'][-1].join
+        rpj['coordinates'].push rpj['coordinates'][0]
+      end
+      coordinates = rpj['coordinates'].map { |c| "#{c[0]} #{c[1]}" }.join ','
+      polygon_strings.push "(#{ coordinates })"
+    end
+
+    "POLYGON(#{ polygon_strings.join ', ' })"
+  end
+
+
+  #
+  # conversion code from geojson polygon format to multipolygon db query format.
+  #
+
+  def self.get_multipolygon_from_raw_polygon_json raw_polygon_json
+    polygon_geojson = JSON.parse raw_polygon_json
+    polygon_geojson = [polygon_geojson] unless polygon_geojson.kind_of?(Array)
+    
+    polygon_strings = []
+    polygon_geojson.each do |rpj|
+      rpj['coordinates'].push rpj['coordinates'][0] unless rpj['coordinates'].empty?
+      coordinates = rpj['coordinates'].map { |c| "#{c[0]} #{c[1]}" }.join ','
+      polygon_strings.push "((#{ coordinates }))"
+    end
+
+    "MULTIPOLYGON(#{ polygon_strings.join ', ' })"
+  end
+
+  def self.get_raw_polygon_json_string_from_multipolygon multipolygon
+    polygons = multipolygon.gsub('MULTIPOLYGON((', '').gsub('))', '').split '('
+    geojson_polygons = []
+
+    polygons.each do |p|
+      geojson = {}
+      geojson['type'] = 'Polygon'
+      geojson['coordinates'] = []
+
+      parts = p.gsub(')', '').strip.split ','
+      parts.each do |c|        
+        coordinates = c.split ' '
+        arr = [coordinates[0].strip.to_f, coordinates[1].strip.to_f]
+        geojson['coordinates'].push arr
+      end
+
+      geojson_polygons.push geojson unless geojson['coordinates'].empty? 
+    end
+
+    JSON.generate geojson_polygons
+  end
+
+
+  def self.reset_datetimes
+    Participation.all.each do |p|
+      unless p.contest.nil?
+        p.update_column :starts_at, p.contest.starts_at
+        p.update_column :ends_at, p.contest.ends_at
+        p.update_column :last_submission_accepted_at, p.contest.last_submission_accepted_at
+      end  
+    end
+
+    Contest.all.each do |c|
+      c.update_column :utc_starts_at, c.starts_at
+      c.update_column :utc_ends_at, c.ends_at
+    end
+
+    Region.all.each do |r|
+      r.set_time_zone_from_polygon
+    end
+  end    
+
+
+  #
+  # tmp functions used to circumvent the fact that
+  # S3 image upload does not work.
+  #
+
+  def save_img str, file_name
+    file_path = "#{Rails.root}/public/#{file_name}.png"
+    i = str.index 'base64,'
+    unless i.nil?
+      data = str[i+7, str.length]
+      data_decoded = Base64.decode64 data
+      File.open(file_path, "wb") do |f|
+        f.write data_decoded
+      end
+      return file_path if File.file?(file_path)
+    end  
+  end
+
+  def save_to_file
+    unless logo_image.nil?
+      filename = "#{Rails.root}/public/region-#{id}-logo.png"
+      i = logo_image.index 'base64,'
+      unless i.nil?
+        data = logo_image[i+7, logo_image.length]
+        data_decoded = Base64.decode64 data
+        File.open(filename, "wb") do |f| 
+          f.write data_decoded
+        end
+      end
+    end
+    unless header_image.nil?
+      filename = "#{Rails.root}/public/region-#{id}-header.png"
+      i = header_image.index 'base64,'
+      unless i.nil?
+        data = header_image[i+7, header_image.length]
+        data_decoded = Base64.decode64 data
+        File.open(filename, "wb") do |f| 
+          f.write data_decoded
+        end
+      end 
+    end
+  end  
+
+  ## Convert raw_polygon_json text into json object
+  def get_polygon_json
+    if raw_polygon_json.nil?
+      return nil
+    end
+
+    polygon_geojson = JSON.parse raw_polygon_json
+    polygon_geojson = [polygon_geojson] unless polygon_geojson.kind_of?(Array)
+
+    return polygon_geojson
+  end
+
+
+  ## Calculate minimum and maximum distance of region from a given coordinate
+  def self.distance_from_point(lat, lng, polygon_geojson)
+    min = max = nil
+    if polygon_geojson.nil?
+      return min, max
+    end
+
+    polygon_geojson.each do |polygon|
+      if !polygon['coordinates'].nil?
+        polygon['coordinates'].each.with_index { |c, i|
+          p1 = Geokit::LatLng.new c[1] , c[0]
+          p2 = Geokit::LatLng.new lat, lng
+          dist = p1.distance_to(p2, units: :kms)
+          if i == 0
+            min = dist
+            max = dist
+          end
+          if dist <= min
+            min = dist
+          end
+          if dist > max
+            max = dist
+          end
+        }
+      end
+    end
+    return min, max
+
+  end
+
+
+  ### Find out whether given coordinates and region are within reach of given distance or not
+  def is_region_near_to_point lat, lng, distance_km=50
+    polygon_geojson = get_polygon_json
+    if polygon_geojson.nil?
+      return false
+    end
+
+    ## If given coordinate resides inside the polygon then return as true
+    return true if contains? lat, lng
+
+    (min_dist, max_dist) = Region.distance_from_point(lat, lng, polygon_geojson)
+
+    ## Return true, if distance between any polygon coordinate and given coordinate is
+    ## less than or equal to required distance
+    if !min_dist.nil? && min_dist.to_f <= distance_km
+      return true
+    else
+      return false
+    end
+  end
+
+  # bounds() -> [Geokit::Bounds]
+  def bounds()
+    bounds = []
+    polygons = get_polygon_json()
+    polygons.each do |polygon|
+      min_lat, max_lat = polygon["coordinates"].map{ |c| c.last }.minmax
+      min_lng, max_lng = polygon["coordinates"].map{ |c| c.first }.minmax
+      bounds.push(
+        Geokit::Bounds.new(
+          # sw
+          Geokit::LatLng.new(min_lat, min_lng), 
+          # ne
+          Geokit::LatLng.new(max_lat, max_lng)
+        )
+      )
+    end
+
+    return bounds
+  end
+
+  # scaled_bbox_geojson(with_multiplier:) -> Geokit::Bounds
+  def scaled_bbox_geojson(with_multiplier:)
+    scaled_polygons = []
+    bounds().each do |bound|
+      scaled_ne = bound.center.endpoint(
+        bound.center.heading_to(bound.ne), 
+        bound.center.distance_to(bound.ne, units: :kms) * with_multiplier, 
+        units: :kms
+      )
+      scaled_sw = bound.center.endpoint(
+        bound.center.heading_to(bound.sw), 
+        bound.center.distance_to(bound.sw, units: :kms) * with_multiplier, 
+        units: :kms
+      )
+      scaled_polygons.push({
+        "type" => "Polygon",
+        "coordinates" => [
+          # nw
+          [scaled_sw.lng, scaled_ne.lat],
+          # ne
+          [scaled_ne.lng, scaled_ne.lat],
+          # se
+          [scaled_ne.lng, scaled_sw.lat],
+          # sw
+          [scaled_sw.lng, scaled_sw.lat],
+          # nw to close polygon
+          [scaled_sw.lng, scaled_ne.lat]
+        ]
+      })
+    end
+
+    return scaled_polygons
+  end
+
+  ## Get largest neighboring region by size
+  def get_neighboring_region(region_type: )
+    nr = nil
+    if neighboring_regions.present?
+      nr = neighboring_regions.order("size").first if region_type == 'locality'
+      nr = neighboring_regions.order("size").last if region_type == 'greater_region'
+    end
+
+    return nr
+  end
+
+  # This method returns all the species of greater region(ranked by count in descending order)
+  # which are not found in the base region with scientific_name, common_name and images
+  def get_undiscovered_species(offset:, limit:, participant: nil)
+    undiscovered_species = []
+    nr = get_neighboring_region(region_type: 'greater_region')
+    return undiscovered_species if !nr.present?
+
+    if participant.present?
+      nr_top_species = nr.get_top_taxonomies(start_dt: participant.starts_at, end_dt: participant.ends_at).map{|row| row[0]}
+      return undiscovered_species if nr_top_species.length <= 0
+
+      species = participant.region
+                           .observations
+                           .distinct
+                           .where("observed_at BETWEEN ? and ?", participant.starts_at, participant.ends_at)
+                           .where(taxonomy_id: nr_top_species).pluck(:taxonomy_id).uniq
+    else
+      nr_top_species = nr.get_top_taxonomies().map{|row| row[0]}
+      return undiscovered_species if nr_top_species.length <= 0
+      species = observations.distinct.where(taxonomy_id: nr_top_species).pluck(:taxonomy_id).uniq
+    end
+    undiscovered_species = nr_top_species - species
+    undiscovered_species = nr.get_species_details(species: undiscovered_species, offset: offset, limit: limit) if undiscovered_species.length.positive?
+
+    return undiscovered_species
+  end
+
+  def get_bio_value
+    avg_obs_score = Constant.find_by_name('average_observations_score')&.value || 20
+    max_obs_score = Constant.find_by_name('max_observations_score')&.value || 300
+
+    observations = RegionsObservationsMatview.get_observations_for_region(region_id: self.id)
+    bio_value =  observations.average(:bioscore)
+    if !bio_value.present? || bio_value.zero? || (bio_value.present? && bio_value < avg_obs_score)
+      bio_value = avg_obs_score
+    elsif bio_value.present? && bio_value > max_obs_score
+      bio_value = max_obs_score
+    end
+    return bio_value
+  end
+
+  def get_region_scores
+    region_scores = Hash.new([])
+    region_scores       = get_region_base_scores
+    intermediate_scores = get_intermediate_scores
+    region_scores.merge!(intermediate_scores)
+
+    return region_scores
+  end
+
+  def get_region_base_scores
+    region_scores = Hash.new([])
+    region_scores[:total_vs_greater_region_observations_score] = get_regions_score(region_type: 'greater_region', score_type: 'observations_score').to_f
+    region_scores[:total_vs_locality_observations_score]       = get_regions_score(region_type: 'locality', score_type: 'observations_score').to_f
+    region_scores[:this_year_vs_total_observations_score]      = get_yearly_score(score_type: 'observations_score', num_years: 1).to_f
+    region_scores[:last_2years_vs_total_observations_score]    = get_yearly_score(score_type: 'observations_score', num_years: 2).to_f
+
+    region_scores[:total_vs_greater_region_species_score] = get_regions_score(region_type: 'greater_region', score_type: 'species_score').to_f
+    region_scores[:total_vs_locality_species_score]       = get_regions_score(region_type: 'locality', score_type: 'species_score').to_f
+    region_scores[:this_year_vs_total_species_score]      = get_yearly_score(score_type: 'species_score', num_years: 1).to_f
+    region_scores[:last_2years_vs_total_species_score]    = get_yearly_score(score_type: 'species_score', num_years: 2).to_f
+
+    region_scores[:total_vs_greater_region_activity_score] = get_regions_score(region_type: 'greater_region', score_type: 'people_score').to_f
+    region_scores[:total_vs_locality_activity_score]       = get_regions_score(region_type: 'locality', score_type: 'people_score').to_f
+    region_scores[:this_year_vs_total_activity_score]      = get_yearly_score(score_type: 'people_score', num_years: 1).to_f
+    region_scores[:last_2years_vs_total_activity_score]    = get_yearly_score(score_type: 'people_score', num_years: 2).to_f
+
+    return region_scores
+  end
+
+  def get_intermediate_scores
+    region_scores = Hash.new([])
+    region_scores[:bioscore] = bioscore
+    region_scores[:bio_value] = bio_value
+
+    region_scores[:species_diversity_score] = species_diversity_score
+    region_scores[:monitoring_score] = monitoring_score
+    region_scores[:community_score] = community_score
+
+    region_scores[:species_trend] = species_trend
+    region_scores[:monitoring_trend] = monitoring_trend
+    region_scores[:community_trend] = community_trend
+
+    return region_scores
+  end
+
+  def calculate_scores_to_store
+    region_scores = Hash.new([])
+
+    region_scores = get_region_base_scores
+
+    constants = Constant.get_all_constants
+    obs_count     = get_observations_count(include_gbif: true)
+    species_count = get_species_count(include_gbif: true)
+    people_count  = get_people_count(include_gbif: true)
+    # observations_per_species = species_count.positive? ? (obs_count.to_f / species_count.to_f) : 0
+    species_per_observations = obs_count.positive? ? (species_count.to_f / obs_count.to_f) : 0
+
+    observations_per_person  = people_count.positive? ? (obs_count.to_f / people_count.to_f) : 0
+
+    region_scores[:bio_value] = obs_count.positive? ? self.get_bio_value.round(2) * constants[:average_observations_score_constant] : 0
+
+    region_scores[:species_diversity_score] = ((species_count * constants[:species_constant]) + (species_per_observations * constants[:species_per_observation_constant] +
+                                              ((region_scores[:total_vs_locality_species_score] ) * constants[:locality_species_constant] +
+                                              (region_scores[:total_vs_greater_region_species_score]) * constants[:greater_region_species_constant] +
+                                              (region_scores[:this_year_vs_total_species_score]) * constants[:current_year_species_constant] +
+                                              (region_scores[:last_2years_vs_total_species_score] ) * constants[:species_trend_constant]) / 100)).round(2)
+    bi_yearly_vs_total_species_score = region_scores[:last_2years_vs_total_species_score] / 100
+    yearly_vs_total_species_score    = region_scores[:this_year_vs_total_species_score] / 100
+    region_scores[:species_trend]    = (bi_yearly_vs_total_species_score.positive? ?
+                                       ((yearly_vs_total_species_score - (bi_yearly_vs_total_species_score/2))/ (bi_yearly_vs_total_species_score/2)).round(2)
+                                       : 0) * constants[:species_trend_constant]
+
+    region_scores[:monitoring_score] = ((obs_count * constants[:observations_constant]) + (((region_scores[:total_vs_locality_observations_score] ) * constants[:locality_observations_constant] +
+                                       (region_scores[:total_vs_greater_region_observations_score]) * constants[:greater_region_observations_constant] +
+                                       (region_scores[:this_year_vs_total_observations_score]) * constants[:current_year_observations_constant] +
+                                       (region_scores[:last_2years_vs_total_observations_score] ) * constants[:observations_trend_constant]) / 100)).round(2)
+    bi_yearly_vs_total_obs_score     = region_scores[:last_2years_vs_total_observations_score] / 100
+    yearly_vs_total_obs_score        = region_scores[:this_year_vs_total_observations_score] / 100
+    region_scores[:monitoring_trend] = (bi_yearly_vs_total_obs_score.positive? ?
+                                       ((yearly_vs_total_obs_score - (bi_yearly_vs_total_obs_score/2))/ (bi_yearly_vs_total_obs_score/2) ).round(2)
+                                       : 0) * constants[:observations_trend_constant]
+
+    region_scores[:community_score]   = ((people_count * constants[:people_constant]) + (observations_per_person * constants[:observations_per_person_constant] +
+                                        ((region_scores[:total_vs_locality_activity_score] ) * constants[:locality_people_constant] +
+                                        (region_scores[:total_vs_greater_region_activity_score]) * constants[:greater_region_people_constant] +
+                                        (region_scores[:this_year_vs_total_activity_score]) * constants[:current_year_people_constant] +
+                                        (region_scores[:last_2years_vs_total_activity_score] ) * constants[:activity_trend_constant]) / 100)).round(2)
+    bi_yearly_vs_total_activity_score = region_scores[:last_2years_vs_total_activity_score] / 100
+    yearly_vs_total_activity_score    = region_scores[:this_year_vs_total_activity_score] / 100
+    region_scores[:community_trend]   = (bi_yearly_vs_total_activity_score.positive? ?
+                                        ((yearly_vs_total_activity_score - (bi_yearly_vs_total_activity_score/2))/ (bi_yearly_vs_total_activity_score/2)).round(2)
+                                        : 0) * constants[:activity_trend_constant]
+
+    region_scores[:bioscore] =  (region_scores[:bio_value] + region_scores[:species_diversity_score] +
+                                region_scores[:species_trend] + region_scores[:monitoring_score] +
+                                region_scores[:monitoring_trend] + region_scores[:community_score] +
+                                region_scores[:community_trend]).round(2)
+
+    return region_scores
+  end
+
+
+  def self.calculate_percentiles(regions:, key: )
+    n = regions.length
+
+    regions.each_with_index do |r, i|
+      percentile = (100 * i / (n - 1).to_f).round(2)
+      regions[n-i-1][key.to_sym] = percentile
+    end
+    return regions
+  end
+
+  def self.merge_intermediate_scores_and_percentiles(regions:)
+    mod_regions = []
+
+    regions.each do |r|
+      region_scores = Hash.new([])
+      region_scores[:id] = r.id
+      intermediate_scores = r.get_intermediate_scores
+      region_scores.merge!(intermediate_scores)
+      mod_regions.push(region_scores)
+    end
+    mod_regions = Region.calculate_percentiles(regions: mod_regions.sort_by! { |hsh| hsh[:bioscore] }.reverse!, key: 'bioscore_percentile')
+    mod_regions = Region.calculate_percentiles(regions: mod_regions.sort_by! { |hsh| hsh[:species_diversity_score] }.reverse!, key: 'species_diversity_percentile')
+    mod_regions = Region.calculate_percentiles(regions: mod_regions.sort_by! { |hsh| hsh[:monitoring_score] }.reverse!, key: 'monitoring_percentile')
+    mod_regions = Region.calculate_percentiles(regions: mod_regions.sort_by! { |hsh| hsh[:community_score] }.reverse!, key: 'community_percentile')
+    mod_regions = Region.calculate_percentiles(regions: mod_regions.sort_by! { |hsh| hsh[:bio_value] }.reverse!, key: 'biovalue_percentile')
+
+    return mod_regions
+  end
+
+
+  def self.get_regions_for_data_fetching
+    regions = []
+
+    Region.all.each do |r|
+      next if r.base_region_id.present?
+      nr = r.get_neighboring_region(region_type: 'greater_region')
+
+      if nr.present?
+        fetch_neighboring_region_data = false
+        r.participations.in_progress.in_competition.each do |p|
+          next unless p.is_active?
+          if p.contest.fetch_neighboring_region_data == false
+            fetch_neighboring_region_data = false
+            break
+          else
+            fetch_neighboring_region_data = p.contest.fetch_neighboring_region_data
+          end
+        end
+        # TBA : Need to add condition to check for region level fetch_neighboring_region_data 
+        # when there are no participations for the region
+
+        if fetch_neighboring_region_data == true
+          regions.push(nr)
+        else
+          regions.push(r)
+        end
+      else
+        regions.push(r)
+      end
+    end
+    return regions
+  end
+
+  def self.get_data_sources_and_date_range_for_region(region:)
+    ends_at = Time.now
+    data_sources = []
+
+    data_source_with_date_range = Hash.new([])
+    starts_at = 99999999999
+    DataSource.all.each do |ds|
+      latest_observation = region.observations.where("observations_regions.data_source_id = #{ds.id}").order("observed_at").last
+      if latest_observation&.observed_at.present?
+        starts_at = latest_observation.observed_at
+      else
+        starts_at = ends_at - Utils.convert_to_seconds(unit: 'year', value: 3)
+      end
+
+      data_source = Hash.new([])
+      data_source[:data_source] = ds
+      data_source[:starts_at]   = starts_at
+      data_source[:ends_at]     = ends_at
+      data_sources.push(data_source)
+
+      ## TBA - Add condition to skip gbif during full fetch
+    end
+    return data_sources
+  end
+
+  def self.get_data_sources_and_date_range_for_participations(region: )
+    ends_at = Time.now
+    data_sources = []
+
+    data_source_with_date_range = Hash.new([])
+
+    participations = region.participations.in_progress.in_competition
+    participations = Region.find_by_id(region.base_region_id).participations.in_progress.in_competition if !participations.count.positive? && region.base_region_id.present?
+
+    participations.each do |p|
+      next unless p.is_active?
+      ds = p.data_sources.map {|ds| ds }
+      ds.each do |d|
+        starts_at = 99999999999
+
+        latest_observation = Region.find_by_id(region.id).observations.where("observations_regions.data_source_id = #{d.id}").order("observed_at").last
+        obs_date = nil
+        obs_date = data_source_with_date_range["#{d.id}"][:starts_at] if data_source_with_date_range["#{d.id}"].present?
+
+        if latest_observation&.observed_at.present?
+          starts_at = latest_observation.observed_at.to_time.to_i
+          # For gbif, if latest observation found was more than 3 years back
+          # then set the start date to 3 years back
+          if d.name == 'gbif'
+            start_dt_ballpark = ends_at - Utils.convert_to_seconds(unit: 'year', value: 3)
+            start_dt_ballpark = start_dt_ballpark.to_time.to_i
+            starts_at = start_dt_ballpark if starts_at < start_dt_ballpark
+          end
+        else
+          participation_start_dt = p.contest.starts_at
+          participation_start_dt = ends_at - Utils.convert_to_seconds(unit: 'year', value: 3) if d.name == 'gbif'
+          participation_start_dt = participation_start_dt.to_time.to_i
+          starts_at = participation_start_dt if participation_start_dt < starts_at
+        end
+        starts_at = obs_date if obs_date.present? && starts_at > obs_date
+
+        data_source_with_date_range["#{d.id}"] = { data_source: d,
+                                                   starts_at: starts_at,
+                                                   ends_at: Time.now }
+      end
+      # TBA :: For full fetch we will need to get date range from contest which has latest start date
+      #  and not from observations.updated_at
+      data_sources.push(*ds)
+    end
+    data_sources = data_sources.uniq.compact
+    data_sources.map! do |ds|
+      data_source = Hash.new([])
+      data_source = data_source_with_date_range["#{ds.id}"]
+      next unless data_source.present?
+      # Delayed::Worker.logger.info ">>>>>>>>>>>>>>>>>>>>> data_source: #{data_source}"
+      starts_at_date = data_source_with_date_range["#{ds.id}"][:starts_at]
+      data_source[:starts_at] = Time.at(starts_at_date).to_datetime
+      ds = data_source
+    end
+
+    return data_sources
+  end
+
+  def self.get_data_sources_and_date_range_for_data_fetch(regions:)
+    r_hash = []
+
+    regions.each do |r|
+      ends_at = Time.now
+      data_sources = []
+      
+      data_source_with_date_range = Hash.new([])
+      observed_at = 99999999999
+
+      data_sources = Region.get_data_sources_and_date_range_for_participations(region: r)
+      Delayed::Worker.logger.info ">>>>>>>>>> region : #{r.name}, self.get_data_sources_and_date_range_for_data_fetch #{data_sources}"
+
+      r_hash.push({
+        region: r,
+        data_sources: data_sources.uniq
+      }) if data_sources.count.positive?
+
+    end
+    return r_hash
+  end
+
+
+  def add_to_contest(contest_id:)
+    params = {}
+    params[:region_id] = id
+    params[:contest_id] = contest_id
+    params[:status] = 'accepted'
+    participation = Participation.new params
+    if participation.save!
+      participation.data_sources << DataSource.where.not(name: ['citsci', 'ebird', 'observation.org'])
+      Rails.logger.info("Added participation: #{participation.id} for contest id: #{contest_id} and region id: #{id}")
+    else
+      Rails.logger.info("Error in adding participation for region #{id}, and contest: #{contest_id} ")
+    end
+    return
+  end
+
+
+
+  rails_admin do
+    list do
+      field :id
+      field :name          
+      field :description
+      field :raw_polygon_json
+      field :created_at
+      field :size
+    end
+    edit do 
+      field :user
+      field :status
+      field :name
+      field :slug
+      field :subscription do
+        visible do
+          !bindings[:object].base_region_id.present?
+        end
+      end
+      field :display_flag do
+        visible do
+          !bindings[:object].base_region_id.present?
+        end
+      end
+      field :size do
+        visible do
+          bindings[:object].base_region_id.present?
+        end
+      end
+      # field :fetch_neighboring_region_data do
+      #   visible do
+      #     !bindings[:object].base_region_id.present?
+      #   end
+      # end
+      # field :create_neighboring_region_subregions_for_ebird do
+      #   visible do
+      #     !bindings[:object].base_region_id.present?
+      #   end
+      # end
+      field :description
+      field :region_url
+      field :population
+      field :logo_image_url
+      field :header_image_url
+      field :raw_polygon_json
+      field :observation_dot_org_id
+      field :inaturalist_place_id
+      field :citsci_project_id
+      field :created_at
+    end
+    show do 
+      field :id      
+      field :user
+      field :status
+      field :name
+      field :slug
+      field :size
+      field :description
+      field :region_url
+      field :population
+      field :logo_image_url
+      field :header_image_url
+      field :raw_polygon_json
+      field :observation_dot_org_id
+      field :inaturalist_place_id
+      field :citsci_project_id
+      field :created_at
+    end  
+  end
+
+end

@@ -1,0 +1,38 @@
+
+<div class="row justify-content-center my-5">
+  <div class="col-6">
+    <button type="button" class="btn btn-warning w-100" data-bs-toggle="modal" data-bs-target="#participation_modal">+ Participate in a new Contest</button>
+  </div>
+</div>
+
+<div class="row my-5">
+  <div class="col-2 fw-bold">Region</div>
+  <div class="col-2 fw-bold">Contest</div>
+  <div class="col-2 fw-bold">Number of Observations</div>
+  <div class="col-2 fw-bold">Data Sources</div>
+  <div class="col-2 fw-bold">Status</div>
+  <div class="col-2"></div>
+</div>
+
+<% @participations.each do |p| %>
+  <div class="row mb-3">
+  	<div class="col-2">
+      <a href="<%= p.region.get_path %>"><%= p.region.name %></a>
+    </div>
+  	<div class="col-2">
+      <a href="<%= p.contest.get_path %>"><%= p.contest.title %></a>
+    </div>
+  	<div class="col-2"><%= p.contest.observations.count %></div>
+    <div class="col-2"><%= p.data_sources.pluck(:name).join ', ' %></div>
+  	<div class="col-2"><%= p.status %></div>
+  	<div class="col-2">
+      <a role="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#participation_<%= p.id %>_modal">Edit</a>
+    </div>
+  </div>
+<% end %>
+
+<% @participations.each do |p| %>
+  <%= render partial: 'participation_form', locals: { participation: p, id: "participation_#{ p.id }_modal", title: 'Edit Participation' } %>
+<% end %>
+
+<%= render partial: 'participation_form', locals: { participation: nil, id: "participation_modal", title: 'Create a Participation' } %>

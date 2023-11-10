@@ -1,0 +1,77 @@
+<div class="row justify-content-center">
+  <div class="col-5">
+    <div class="row mt-5">
+      <div class="col mb-3 h4 text-center proxima section-header">Top Species</div> 
+    </div>  
+    <div class="row my-5">
+      <div class="col">
+        <% object.get_top_species(10).each.with_index(1) do |s,i| %>
+          <%= render partial: 'ranked_object', locals: { object: s, i: i } %>
+        <% end %>
+        <div class="row mt-2">
+          <div class="col d-flex justify-content-end">
+            <a data-bs-toggle="modal" data-bs-target="#species_modal" class="region-title-link" role="button">View All</a>
+          </div>  
+        </div>
+      </div>  
+    </div>
+  </div>
+  <div class="col"></div>
+  <div class="col-5">
+    <div class="row mt-5">
+      <div class="col mb-3 h4 text-center proxima section-header">Top Observers</div> 
+    </div>  
+    <div class="row my-5">
+      <div class="col">      
+        <% object.get_top_people(10).each.with_index(1) do |p,i| %>
+          <%= render partial: 'ranked_observer', locals: { object: p, i: i } %>
+        <% end %>
+        <div class="row mt-2">
+          <div class="col d-flex justify-content-end">
+            <a data-bs-toggle="modal" data-bs-target="#people_modal" class="region-title-link" role="button">View All</a>
+          </div>  
+        </div>        
+      </div>      
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="species_modal" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h6 class="modal-title text-center proxima section-header">Top Species</h6>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row justify-content-center mb-5">
+          <div class="col-8">
+            <% object.get_top_species.each.with_index(1) do |s,i| %>
+              <%= render partial: 'ranked_object', locals: { object: s, i: i } %>
+            <% end %>
+          </div>  
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="people_modal" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h6 class="modal-title text-center proxima section-header">Top People</h6>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row justify-content-center mb-5">
+          <div class="col-8">
+            <% object.get_top_people.each.with_index(1) do |s,i| %>
+              <%= render partial: 'ranked_observer', locals: { object: s, i: i } %>
+            <% end %>
+          </div>  
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

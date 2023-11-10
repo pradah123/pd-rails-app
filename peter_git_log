@@ -1,0 +1,967 @@
+commit b67a52a88c2e93a0bd02c8d91daca814ed1d2f54
+Merge: adf1e6f ca74625
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Fri Jun 10 02:47:04 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    new fetching code
+    
+    See merge request earthguardians1/biosmart-api!209
+
+commit adf1e6fb8b128182c1dd59e3b017ac1cdc076c5d
+Merge: 5af4d37 cf9d982
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Fri Jun 10 02:28:19 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    new fetching code
+    
+    See merge request earthguardians1/biosmart-api!208
+
+commit 5af4d370edb2bafd37b94235dfa34782aa84d960
+Merge: f3a926e 8e56986
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Thu Jun 9 21:24:10 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    bug on search
+    
+    See merge request earthguardians1/biosmart-api!207
+
+commit f3a926eeaad22c1c0abc5b13c22eb45f5f21d750
+Merge: 136aeda be2b098
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Thu Jun 9 21:08:41 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    final set of fixes
+    
+    See merge request earthguardians1/biosmart-api!206
+
+commit be2b098c122f3c259b8916ec58585e4aeb60eae5
+Merge: f1f87c6 136aeda
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Thu Jun 9 21:08:33 2022 +0000
+
+    Merge branch 'main' into 'peter'
+    
+    # Conflicts:
+    #   app/controllers/api/v1/observation_controller.rb
+
+commit 6a87c225926234ed1bff42037562b54d0ac36c6c
+Merge: 9a029de 81bd3ec
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Fri Jun 3 04:47:14 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    bug
+    
+    See merge request earthguardians1/biosmart-api!200
+
+commit 9a029de11782b0760f1e5ed6d89bc568ab3c6249
+Merge: dcf3b2a fe2f599
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Fri Jun 3 04:38:51 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    remove observations without images
+    
+    See merge request earthguardians1/biosmart-api!198
+
+commit dcf3b2afb50cb158ccfde4d094ce7aa04830bf5d
+Merge: c262885 c4d5277
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Thu Jun 2 22:23:25 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    observations bug fix
+    
+    See merge request earthguardians1/biosmart-api!196
+
+commit c262885b59934ca9b28e0c0e79e8be1080f983e9
+Merge: bcab97f 044b4da
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Thu Jun 2 21:42:19 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    top page map
+    
+    See merge request earthguardians1/biosmart-api!194
+
+commit bcab97f3fc98458ed4976e52e3df3b62029ed2db
+Merge: 9afedc3 74cc13a
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Thu Jun 2 04:56:45 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    hide elements not completed
+    
+    See merge request earthguardians1/biosmart-api!192
+
+commit 9afedc38a89b3a4c0f5dc3345f8ad9f9fc7e20f5
+Merge: 5243101 d12e44d
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Thu Jun 2 03:42:26 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    bug fixes
+    
+    See merge request earthguardians1/biosmart-api!190
+
+commit 5243101af2dcfe3917e4534b420540ca2136e3ec
+Merge: 895ba76 f7bcd24
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Tue May 31 04:38:18 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    fix to species list
+    
+    See merge request earthguardians1/biosmart-api!188
+
+commit 895ba76978f77d671645de551e6bc1ace075b1e7
+Merge: 0988297 f1aca27
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Tue May 31 04:36:31 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    fix to species list
+    
+    See merge request earthguardians1/biosmart-api!186
+
+commit 0988297aeacb81738013e5571b71d9c65c913ab6
+Merge: 4dccacd 6aefc61
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Mon May 30 23:15:42 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    fixes to scores and rankings
+    
+    See merge request earthguardians1/biosmart-api!184
+
+commit 4dccacd1d9f599d2def645e64faa0d0abb365007
+Merge: 8e10660 e01f5d6
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Mon May 30 23:08:42 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    fixes to scores and rankings
+    
+    See merge request earthguardians1/biosmart-api!182
+
+commit 048676de48b8fec0f2388c0747678315cc6d2a2d
+Author: Peter Williams <prwprw1973@gmail.com>
+Date:   Wed May 25 13:32:09 2022 +0900
+
+    asdf
+
+commit 007bdf03a91982e2c8810651ef49ced221f95156
+Author: Peter Williams <prwprw1973@gmail.com>
+Date:   Wed May 25 13:30:28 2022 +0900
+
+    asdf
+
+commit de1c1c91a38a47c651c6a4e6b0f88505106741cc
+Author: Peter Williams <prwprw1973@gmail.com>
+Date:   Wed May 25 13:08:49 2022 +0900
+
+    maps filter
+
+commit af8167c3a263739b48c3b025dc8c5277947a810f
+Author: Peter Williams <prwprw1973@gmail.com>
+Date:   Fri May 20 13:57:23 2022 +0900
+
+    top page regions
+
+commit 29f45b2336b1f85bbd16a247bc27022532990867
+Author: Peter Williams <prwprw1973@gmail.com>
+Date:   Fri May 20 12:53:43 2022 +0900
+
+    api docs
+
+commit 11ea95a04866e5b000675b26200adbf82971277a
+Author: Peter Williams <prwprw1973@gmail.com>
+Date:   Fri May 20 12:31:32 2022 +0900
+
+    api docs
+
+commit 4b341b440009933d27f8c3f841c82fc96fcd9405
+Author: Peter Williams <prwprw1973@gmail.com>
+Date:   Fri May 20 12:27:42 2022 +0900
+
+    api docs
+
+commit 7c57020bab228224e72a80dab45463eb4d03d96f
+Author: Peter Williams <prwprw1973@gmail.com>
+Date:   Fri May 20 12:25:00 2022 +0900
+
+    api docs
+
+commit 820117c35ca9af92ba128e532e16e874754fe23f
+Author: Peter Williams <prwprw1973@gmail.com>
+Date:   Fri May 20 12:23:15 2022 +0900
+
+    api docs
+
+commit 8c622dc32009ac33b94be29959b68894054fc64d
+Author: Peter Williams <prwprw1973@gmail.com>
+Date:   Fri May 20 12:09:37 2022 +0900
+
+    api docs
+
+commit 0d6e33b389857de4e65c2bb149c2a2c4747b1442
+Merge: ecfcac6 5491082
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Thu May 19 00:49:54 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    trello 247 246 244 242 234
+    
+    See merge request earthguardians1/biosmart-api!176
+
+commit ecfcac6d0de242464ac8720f0f0584b839a9557d
+Merge: 7e4d895 321604b
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Wed May 18 03:41:55 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    Peter
+    
+    See merge request earthguardians1/biosmart-api!174
+
+commit 321604b160709e49711c3b74c8be7291eeeb82ab
+Author: Peter Williams <prwprw1973@gmail.com>
+Date:   Wed May 18 12:40:31 2022 +0900
+
+    bug fixes
+
+commit 5ad0e275193fb0f46e7be66de4416ed309e623a1
+Author: Peter Williams <prwprw1973@gmail.com>
+Date:   Wed May 18 12:32:49 2022 +0900
+
+    bug fixes
+
+commit 7e4d895908b5ad624ab5171ff55c98b575202b81
+Merge: e4b9242 44415b2
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Wed May 18 03:20:45 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    bug fixes
+    
+    See merge request earthguardians1/biosmart-api!172
+
+commit 44415b2c7a625115f481debbc60c9ab2d39abd71
+Author: Peter Williams <prwprw1973@gmail.com>
+Date:   Wed May 18 12:19:58 2022 +0900
+
+    bug fixes
+
+commit e4b9242bf5c2e848da61d6b1e78a29b47ba0c1e1
+Merge: 50a9471 d084d42
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Wed May 18 03:11:27 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    bug fixes
+    
+    See merge request earthguardians1/biosmart-api!171
+
+commit d084d42ad531b0ec7a7ae6e25d53a1360ce52d44
+Author: Peter Williams <prwprw1973@gmail.com>
+Date:   Wed May 18 12:11:01 2022 +0900
+
+    bug fixes
+
+commit 50a9471dcf23b230ae0b6d9faaa0cfbd1bfc7b91
+Merge: d226e75 29d6893
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Wed May 18 02:58:56 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    bug fixes
+    
+    See merge request earthguardians1/biosmart-api!170
+
+commit 29d6893702d4bf8b7b9f0263a9ccccd7af3b00a3
+Author: Peter Williams <prwprw1973@gmail.com>
+Date:   Wed May 18 11:58:12 2022 +0900
+
+    bug fixes
+
+commit d226e7574f5880664d8a87f04ef34e105537edf9
+Merge: 5bcaa6b c65e242
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Wed May 18 01:41:30 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    fix to search
+    
+    See merge request earthguardians1/biosmart-api!169
+
+commit c65e242f939a8c8c080b62dadceeec5b4ddf603b
+Author: Peter Williams <prwprw1973@gmail.com>
+Date:   Wed May 18 10:40:46 2022 +0900
+
+    fix to search
+
+commit 5bcaa6b0671f8fcec0ca5a2aeaf83663d46d7c3e
+Merge: 31d278a b1a9284
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Tue May 17 04:06:59 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    trello 160, 226, 228, 195, 213, 139
+    
+    See merge request earthguardians1/biosmart-api!168
+
+commit 1d16ad1c89582298473500bf2d9317250d4e12ec
+Merge: 7048df0 33fd730
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Wed May 11 04:31:20 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    wrong link for contest
+    
+    See merge request earthguardians1/biosmart-api!164
+
+commit 7048df0546ea49b565a7fbd1857e22f0a707bca2
+Merge: 9d91213 31dc055
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Wed May 11 04:00:18 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    spelling mistake
+    
+    See merge request earthguardians1/biosmart-api!163
+
+commit 9d9121305882da895efca8a96540cc1a258d3c35
+Merge: 2644c31 d6ac042
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Wed May 11 03:50:49 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    fix participations ordering
+    
+    See merge request earthguardians1/biosmart-api!162
+
+commit 2644c31f6208ff68932847124e720d2735bf0566
+Merge: 0061b89 d14b243
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Wed May 11 03:44:16 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    fix incomplete merge of my code a few days back
+    
+    See merge request earthguardians1/biosmart-api!161
+
+commit 0061b89d748046d7b3a5152028ee72a4616fb023
+Merge: 46ce91a c21efdd
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Wed May 11 03:24:52 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    trello 221 207 217 214 215 200 201
+    
+    See merge request earthguardians1/biosmart-api!159
+
+commit c21efdd2e9176e088271a0ad658441198d1a88a8
+Merge: c41961b 46ce91a
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Wed May 11 03:24:39 2022 +0000
+
+    Merge branch 'main' into 'peter'
+    
+    # Conflicts:
+    #   app/models/concerns/countable_statistics.rb
+    #   app/models/contest.rb
+
+commit a3025cfc2e5f1d27a8d0480692f4dee79438c702
+Merge: a1b50f2 45b6bd9
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Thu May 5 05:06:08 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    Peter
+    
+    See merge request earthguardians1/biosmart-api!144
+
+commit 7a49bff59ce555a447bd3d3a929ee41307d89eee
+Merge: dca08af 703dc1e
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Fri Apr 29 12:05:54 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    reset contest times
+    
+    See merge request earthguardians1/biosmart-api!122
+
+commit dca08af3a7f8268cf97fd2b1be5fc8b68ceeb0e0
+Merge: cf7afa8 712b222
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Fri Apr 29 11:22:20 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    reset contest times
+    
+    See merge request earthguardians1/biosmart-api!121
+
+commit cf7afa8b27463ea968facbe5c6c9d819867f564f
+Merge: 854cb83 c45b5bc
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Fri Apr 29 11:12:40 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    reset contest times
+    
+    See merge request earthguardians1/biosmart-api!120
+
+commit 854cb839c9fbb341775aed94671fc30e92cb63f1
+Merge: 045dbeb 453f797
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Fri Apr 29 09:29:23 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    Peter
+    
+    See merge request earthguardians1/biosmart-api!119
+
+commit bc0124c5c35e5f77fcd868315b50bfc1131e8906
+Merge: 4d0810c 259340f
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Fri Apr 29 02:22:45 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    Peter
+    
+    See merge request earthguardians1/biosmart-api!110
+
+commit 4d0810ca233774bdeee6fe87d32190c9a5e9c9d7
+Merge: 10c8ddb 80a6f69
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Fri Apr 29 01:54:25 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    title- add dates
+    
+    See merge request earthguardians1/biosmart-api!107
+
+commit 10c8ddbd2be1d34eb9cae7a97e4f8bfe3c55cf12
+Merge: 6a64b4b c06d0b2
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Fri Apr 29 01:24:12 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    observation images count
+    
+    See merge request earthguardians1/biosmart-api!106
+
+commit 6a64b4b3f668825751330b482c430cf7c1a6b2c5
+Merge: 3ca9fea cf3bd45
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Fri Apr 29 01:19:19 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    observation images count
+    
+    See merge request earthguardians1/biosmart-api!105
+
+commit 3ca9fea477f43edb892a2cf001fad563d3861a44
+Merge: 5d9112f 8b0aa41
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Fri Apr 29 01:12:13 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    layout and links change
+    
+    See merge request earthguardians1/biosmart-api!104
+
+commit 5d9112f71955d25097df20887aa812701cb64750
+Merge: 18e9ee8 012ac6e
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Fri Apr 29 00:59:11 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    layout and links change
+    
+    See merge request earthguardians1/biosmart-api!103
+
+commit 18e9ee84bce0e1908a7d8fa5bdd970a239bd0db6
+Merge: 0effb27 624ebf8
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Fri Apr 29 00:55:15 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    Peter
+    
+    See merge request earthguardians1/biosmart-api!102
+
+commit e13c8bbdb61b1c2efcf27fea6aa5ff8143e7116a
+Merge: 5a3f64b 8c9bb78
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Thu Apr 28 12:47:09 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    bugs
+    
+    See merge request earthguardians1/biosmart-api!97
+
+commit 5a3f64b8a82eb0519bd1f157ec72b4ccd28c2c5a
+Merge: 017c74f 3a9859e
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Thu Apr 28 12:39:57 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    bugs
+    
+    See merge request earthguardians1/biosmart-api!96
+
+commit 017c74f0e9edf17d4b70ccbc762c620f3f75df90
+Merge: 87201a3 b486a29
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Thu Apr 28 12:18:11 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    subregion data formats for api queries
+    
+    See merge request earthguardians1/biosmart-api!95
+
+commit 87201a33ccc4ae78ce4ecd7750e96abc589ab8fb
+Merge: 390e03b 68380c7
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Thu Apr 28 10:15:14 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    typo
+    
+    See merge request earthguardians1/biosmart-api!94
+
+commit 390e03bad7352adda51aa58445f68af22a31e6d1
+Merge: 4f198e2 b474abc
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Thu Apr 28 10:11:07 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    typo
+    
+    See merge request earthguardians1/biosmart-api!93
+
+commit 4f198e27b377305d9b54f5c9bcd8931601c1c621
+Merge: 0e06f3b 702707c
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Thu Apr 28 10:05:47 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    regions page change to layout
+    
+    See merge request earthguardians1/biosmart-api!92
+
+commit 5e61ab0579d48b64bb7831e300eea1cbfc669c79
+Merge: e5d16f2 3d8418b
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Thu Apr 28 02:17:02 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    radius fix
+    
+    See merge request earthguardians1/biosmart-api!90
+
+commit e5d16f2794d194a7feb4de9e3c1a2d64e9d1fa65
+Merge: ba5aace 41c61fe
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Thu Apr 28 02:09:15 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    migration issue
+    
+    See merge request earthguardians1/biosmart-api!89
+
+commit ba5aace64b8d685c35676c4a9db85ac6e18d6eea
+Merge: 55caac9 150a38e
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Thu Apr 28 02:06:10 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    migration issue
+    
+    See merge request earthguardians1/biosmart-api!88
+
+commit 55caac93b2f45e47eaa9fd40d6ef85d9768d8392
+Merge: da77d19 e343283
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Thu Apr 28 02:02:26 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    subregions computation
+    
+    See merge request earthguardians1/biosmart-api!87
+
+commit b0fe9f5e1ad3dde85a036b6b3609c1781b0ee26c
+Merge: d8a6804 1176538
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Wed Apr 27 15:45:57 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    asdf
+    
+    See merge request earthguardians1/biosmart-api!85
+
+commit d8a68049ca6c0f07e405ae8e0d35c9c1ab2e48e8
+Merge: b261179 5cc11e1
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Wed Apr 27 15:36:51 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    asdf
+    
+    See merge request earthguardians1/biosmart-api!84
+
+commit b261179d527d4598afcedc608cb6cdadc36644d9
+Merge: 743db79 485fded
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Wed Apr 27 15:18:26 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    asdf
+    
+    See merge request earthguardians1/biosmart-api!82
+
+commit 743db79b6f114e5bf86e77e9bbe0ab26b0b56f38
+Merge: 05fd7e1 ec770e5
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Wed Apr 27 15:09:48 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    asdf
+    
+    See merge request earthguardians1/biosmart-api!81
+
+commit 05fd7e1bd60705d1f50f57f21a392217007c0df1
+Merge: 8befb1f 9503729
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Wed Apr 27 15:03:49 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    remove another migration
+    
+    See merge request earthguardians1/biosmart-api!79
+
+commit 8befb1f561731e76978d3e2562c9f1126142a673
+Merge: b1e9d9a 71b177c
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Wed Apr 27 14:59:03 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    Peter
+    
+    See merge request earthguardians1/biosmart-api!78
+
+commit b1e9d9a4ca5f608a2df0ad7e75c231e7f1df2ba4
+Merge: 93c2ace ae92b7c
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Wed Apr 27 14:32:59 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    142, 143, 85
+    
+    See merge request earthguardians1/biosmart-api!76
+
+commit ae92b7c40ab816336829093c888cac19499871c6
+Merge: 4079ae9 93c2ace
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Wed Apr 27 14:32:52 2022 +0000
+
+    Merge branch 'main' into 'peter'
+    
+    # Conflicts:
+    #   app/models/subregion.rb
+    #   db/schema.rb
+
+commit 6a9e823cc66867018155b5401d19f66587034282
+Merge: 59dc72d 8c29c63
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Mon Apr 25 14:42:51 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    trello cards 136, 133, 107, 88, 103, 57, 112
+    
+    See merge request earthguardians1/biosmart-api!71
+
+commit 803cfcf4c5cb0f0c0312ad6bcec63df0404dd143
+Merge: 4ab18c2 d3d55c7
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Thu Apr 21 08:17:04 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    debug output
+    
+    See merge request earthguardians1/biosmart-api!63
+
+commit d3d55c76f7f8aedf75b45743970e318fc2356014
+Author: Peter Williams <prwprw1973@gmail.com>
+Date:   Thu Apr 21 17:12:07 2022 +0900
+
+    debug output
+
+commit 4ab18c2eb94298cc4cb9970712521b50a7c8a9a9
+Merge: 4a5c67f 63b1c73
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Thu Apr 21 07:31:51 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    debug output
+    
+    See merge request earthguardians1/biosmart-api!60
+
+commit 63b1c7384a1afd500df38109cc832bcbfa95ed53
+Author: Peter Williams <prwprw1973@gmail.com>
+Date:   Thu Apr 21 16:31:04 2022 +0900
+
+    debug output
+
+commit 4a5c67f23d6a2b20d3e4d37cd4c26f244e681d19
+Merge: caeb02d 2499527
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Thu Apr 21 07:20:21 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    debug output
+    
+    See merge request earthguardians1/biosmart-api!59
+
+commit 2499527440a63803c090100c0a4cceb0911ebf17
+Author: Peter Williams <prwprw1973@gmail.com>
+Date:   Thu Apr 21 16:19:43 2022 +0900
+
+    debug output
+
+commit caeb02d6fad52fe30840720c018b5a57d45ff727
+Merge: 2ec44b0 2fd046d
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Thu Apr 21 07:08:34 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    Peter
+    
+    See merge request earthguardians1/biosmart-api!58
+
+commit 2fd046dff3370019154e155d198c73ef4b12f5e9
+Author: Peter Williams <prwprw1973@gmail.com>
+Date:   Thu Apr 21 16:08:00 2022 +0900
+
+    debug output
+
+commit 5454bbb14ad36732f08ec31d54ad900e4e99f2a1
+Author: Peter Williams <prwprw1973@gmail.com>
+Date:   Thu Apr 21 14:37:07 2022 +0900
+
+    debug output
+
+commit 2ec44b08b1992894671c0d1253c405a3e7f9d820
+Merge: 03d0ec6 2f6003e
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Thu Apr 21 05:32:15 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    debug output
+    
+    See merge request earthguardians1/biosmart-api!56
+
+commit 2f6003eafcf1af39a10bf3c91eb6948e605a805f
+Author: Peter Williams <prwprw1973@gmail.com>
+Date:   Thu Apr 21 14:31:37 2022 +0900
+
+    debug output
+
+commit 03d0ec68622b21ff4fcefabf8ae165b21dbdc44b
+Merge: e9e390f c4c270b
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Thu Apr 21 05:18:57 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    debug output
+    
+    See merge request earthguardians1/biosmart-api!55
+
+commit c4c270b8a559358ff72cb0a5d6eeefc422a1ccc9
+Author: Peter Williams <prwprw1973@gmail.com>
+Date:   Thu Apr 21 14:18:02 2022 +0900
+
+    debug output
+
+commit e9e390fd61bdd253143b3ae6f27d67da19089e4f
+Merge: 028f696 76c8ec6
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Thu Apr 21 05:05:55 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    multiple images, text into urls, image gallery
+    
+    See merge request earthguardians1/biosmart-api!54
+
+commit 76c8ec69f4a99b5e8cf4a60239ad6839f9343390
+Author: Peter Williams <prwprw1973@gmail.com>
+Date:   Thu Apr 21 14:03:43 2022 +0900
+
+    multiple images, text into urls, image gallery
+
+commit 3e67815eb9082308475653c8ca1431808be77a3e
+Merge: 7c3ad11 0d336a5
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Wed Apr 20 09:26:45 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    debug fixes
+    
+    See merge request earthguardians1/biosmart-api!49
+
+commit 7c3ad11742f194eb9a4158a3326d482a5878f3ff
+Merge: 49fca90 ab249aa
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Wed Apr 20 08:56:34 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    debug fixes
+    
+    See merge request earthguardians1/biosmart-api!48
+
+commit b2a4dec34f4287ab1d3cd14f6698dac412873b57
+Merge: b3cbe3b f715dcc
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Wed Apr 20 05:27:50 2022 +0000
+
+    Merge branch 'peter' into 'main'
+    
+    front end changes to date, date for last submissions
+    
+    See merge request earthguardians1/biosmart-api!46
+
+commit d564b7dde6d54c2609cb0b05744f31944ae53bd9
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Wed Apr 13 07:02:08 2022 +0000
+
+    Peter comments
+
+commit 5f4cfb07754aeb230134fa1c94e48f6842d0e6fa
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Wed Apr 13 06:59:40 2022 +0000
+
+    Peter comments
+
+commit 96c3f10cc7c8852f38f86e81e82987cdb8b1c603
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Wed Apr 13 06:57:21 2022 +0000
+
+    Peter comments
+
+commit f297cbc3fdfe1c1a84761cd64e990521febd5ee2
+Author: Peter Williams <prw20042004@yahoo.co.uk>
+Date:   Wed Apr 13 06:55:27 2022 +0000
+
+    Peter comments
+
+commit d32120239ff94e1b3f5271212a69ff7a3d1013aa
+Author: Peter Williams <prwprw1973@gmail.com>
+Date:   Mon Apr 11 21:16:34 2022 +0900
+
+    asdf
+
+commit 39b92dbe90ede55c899e0640fd15c8dba3ed05a6
+Author: Peter Williams <prwprw1973@gmail.com>
+Date:   Fri Apr 1 13:57:49 2022 +0900
+
+    asdf
+
+commit 196cc9feca45872195105e313bbe638c0a4546ed
+Author: Peter Williams <prwprw1973@gmail.com>
+Date:   Fri Apr 1 13:52:14 2022 +0900
+
+    asdf
+
+commit dbb9c194399dff343648e77d47c89120500e3e70
+Author: Peter Williams <prwprw1973@gmail.com>
+Date:   Fri Apr 1 13:50:05 2022 +0900
+
+    asdf
+
+commit dfeb251f14b50482e52826ad8ae41d3deeff7b6f
+Author: Peter Williams <prwprw1973@gmail.com>
+Date:   Mon Mar 28 13:15:54 2022 +0900
+
+    asfd
+
+commit f0734ec6f9a5796cfe2e3e4307706f34abcf941f
+Author: Peter Williams <prwprw1973@gmail.com>
+Date:   Thu Mar 24 21:27:16 2022 +0900
+
+    asdf
+
+commit 3ed8dcca2cf86c195f192472c405a10950ca63ba
+Author: Peter Williams <prwprw1973@gmail.com>
+Date:   Thu Mar 24 21:13:51 2022 +0900
+
+    initial commit

@@ -1,0 +1,8 @@
+  <script>
+    <% n = number_with_delimiter observations.count, delimiter: ',' %>
+    $('#nobservations').text("<%= number_with_delimiter nobservations, delimiter: ',' %> observations, ");
+    $('#nobservations_noimage').text("<%= number_with_delimiter nobservations_excluded, delimiter: ',' %> without images");
+  </script>  
+<% observations.each do |o| %>
+  <%= render partial: 'observation', locals: { o: o } %>
+<% end %>

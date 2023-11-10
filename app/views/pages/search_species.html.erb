@@ -1,0 +1,145 @@
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+<script>
+  var _calendar_asset_path = "<%= asset_path('calendar.png') %>";
+
+  $(function() {
+    var month_filter = '<%= escape_javascript params[:month_filter]&.to_json %>';
+    set_month_filter(month_filter);
+    var year_filter = '<%= escape_javascript params[:year_filter]&.to_json %>';
+    set_year_filter(year_filter);
+  });
+</script>
+
+<div class="row justify-content-center mt-2" id="search_species">
+  <div class="col-10">
+    <div class="row my-3">
+      <div class="col">
+      	<div class="row">
+      	  <div class="col h4 text-center proxima section-header mb-3">Search Species</div>
+      	</div>
+        <% if params[:contest_id].present? %>
+          <%= form_tag "/regions/search/species?contest_id=#{params[:contest_id]}", method: "POST", class: "input-group row justify-content-center" do %>
+            <div class="col">
+              <div class="row justify-content-center mt-3 search-species">
+                <div class="col-3 justify-content-left px-1">
+                  <%= select_tag(:month_filter,
+                                 options_for_select(Utils.get_months.each_with_index.map  { |month,i|
+                                                    [month, i+1] },
+                                                    params[:month_filter]),
+                                 { :class => "form-select fw-bold", :multiple => true }
+                                )
+                  %>
+                  <%= hidden_field_tag :all_months, params[:all_months]  %>
+                </div>
+                <div class="col-2 px-1">
+                  <%= select_tag(:year_filter,
+                                 options_for_select(TaxonObservationsMonthlyCountMatview.get_years.each_with_index.map  { |year,i|
+                                                    [year, year] },
+                                                    params[:year_filter]),
+                                 { :class => "form-select fw-bold", :multiple => true }
+                                )
+                  %>
+                  <%= hidden_field_tag :all_years, params[:all_years]  %>
+                </div>
+              </div>
+              <div class="row justify-content-center mt-3 search-species">
+                <div class="col-5 justify-content-left px-1">
+                  <%= text_field_tag 'search_by_species', params[:search_by_species], placeholder: "Search by scientific or common name" , class: 'form-control fw-bold', autocomplete: 'on' %>
+                </div>
+                <div class="col-2 px-1">
+                  <%= submit_tag "Search", class: 'btn btn-warning w-100 fw-bold no-overlap' %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        <% else %>
+          <%= form_tag "/regions/search/species", method: "POST", class: "input-group row justify-content-center" do %>
+            <div class="col">
+              <div class="row justify-content-center mt-2">
+                <div class="col-3 justify-content-left px-1">
+                  <%= select_tag(:contest_filter,
+                              "<option value=''>All</option>".html_safe +
+                              options_for_select(Contest.in_progress.collect {|p| [ p['title'], p['id'] ] }, params[:contest_filter].to_i),
+                              { :class => "form-select fw-bold", :selected => "All Contests"})
+                  %>
+
+                </div>
+                <div class="col-3 justify-content-left px-1">
+                  <%= select_tag(:month_filter,
+                                 options_for_select(Utils.get_months.each_with_index.map  { |month,i|
+                                                    [month, i+1] },
+                                                    params[:month_filter]),
+                                 { :class => "form-select fw-bold", :multiple => true }
+                                )
+                  %>
+                  <%= hidden_field_tag :all_months, params[:all_months]  %>
+
+                </div>
+                <div class="col-2 justify-content-left px-1">
+                    <%= select_tag(:year_filter,
+                                  options_for_select(TaxonObservationsMonthlyCountMatview.get_years.each_with_index.map  { |year,i|
+                                                      [year, year] },
+                                                      params[:year_filter]),
+                                  { :class => "form-select fw-bold", :multiple => true }
+                                  )
+                    %>
+                    <%= hidden_field_tag(:all_years, params[:all_years])  %>
+                </div>
+              </div>
+              <div class="row justify-content-center mt-3 search-species">
+                <div class="col-6 justify-content-left px-1">
+                  <%= text_field_tag 'search_by_species', params[:search_by_species], placeholder: "Search by scientific or common name" , class: 'form-control fw-bold', autocomplete: 'on' %>
+                </div>
+                <div class="col-2 px-1">
+                  <%= submit_tag "Search", class: 'btn btn-warning w-100 fw-bold no-overlap' %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row justify-content-center mt-2">
+  <% if @searched_regions.present? %>
+    <div class="col-12">
+      <div class="row flex-nowrap flex-shrink-1 mb-3" id="searched_regions_block">
+        <div class="header-col col-2 flex-nowrap flex-shrink-1 h6 " style="padding: 1 0 0 0;">
+        </div>
+        <div class="header-col col-3 fw-bold flex-nowrap flex-shrink-1 h6 yellow-font" style="padding: 1 0 0 0;">
+        </div>
+        <div class="header-col col-2 fw-bold flex-nowrap flex-shrink-1 h6 yellow-font align-self-center text-center" style="padding: 1 0 0 0;">
+          Total Sightings
+        </div>
+        <div class="header-col col-1 fw-bold flex-nowrap flex-shrink-1 h6 yellow-font align-self-center text-center" style="padding: 1 0 0 0;">
+          Property
+        </div>
+        <div class="header-col col-2 fw-bold flex-nowrap h6 yellow-font align-self-center text-center" style="padding: 1 0 0 0;">
+          Neighborhood
+        </div>
+        <div class="header-col col-1 fw-bold flex-nowrap flex-shrink-1 h6 yellow-font align-self-center text-center" style="padding: 1 0 0 0;">
+          Greater Region
+        </div>
+        <div class="header-col col-1 fw-bold flex-nowrap flex-shrink-1 h6 yellow-font align-self-center text-center" style="padding: 1 0 0 0;">
+          BioScore
+        </div>
+      </div>
+      <% @searched_regions.each do |r| %>
+        <%= render partial: 'region_with_species_count', locals: { r: r , search_text: @search_by_species, month_filter: @month_filter, year_filter: @year_filter} %>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="row flex-nowrap flex-shrink-1 justify-content-center">
+      <div class="col-10 align-self-center text-center h6 fw-bold">
+        <% if params[:search_by_species] %>
+          '<%= params[:search_by_species] %>' has not been found in any region
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>
+<% if @searched_regions.present? %>
+  <%= paginate @searched_regions %>
+<% end %>

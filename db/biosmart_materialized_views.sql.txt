@@ -1,0 +1,28 @@
+CREATE MATERIALIZED VIEW gbif_unique_species_by_region_month_year AS
+    (                                     
+        SELECT                              
+            obrs.region_id,                       
+            EXTRACT(YEAR FROM observations.observed_at) AS year,
+            EXTRACT(MONTH FROM observations.observed_at) AS month,                               
+            observations.accepted_name,
+            count(observations.accepted_name) AS species_count           
+        FROM                                                
+            observations_regions obrs
+        INNER JOIN
+            observations
+        ON
+            obrs.observation_id = observations.id
+        WHERE
+            obrs.data_source_id = 63
+        GROUP BY
+            obrs.region_id,
+            EXTRACT(YEAR FROM observations.observed_at),
+            EXTRACT(MONTH FROM observations.observed_at),
+            observations.accepted_name
+    )
+WITH DATA;
+
+
+def change
+    drop_view :aggregate_scores, materialized: true
+  end

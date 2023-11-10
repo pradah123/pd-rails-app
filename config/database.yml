@@ -1,0 +1,35 @@
+
+default: &default
+  adapter: postgresql
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  timeout: 5000
+
+development:
+  <<: *default
+  database: development
+  username: 'postgres'
+  password: 'biosmart'
+  # <<: *default
+  # encoding: unicode
+  # database: biosmart_prod
+  # host: biosmart-prod-cluster.cluster-cvij7t7ozqay.ap-southeast-2.rds.amazonaws.com
+  # pool: 5
+  # username: 'dbuser'
+  # password: 'TyyLD9NMQTNHAn74'
+  
+test:
+  <<: *default
+  database: db/test.sqlite3
+
+staging:
+  <<: *default
+  database: db/staging.sqlite3
+
+production:
+  <<: *default
+  encoding: unicode
+  database: biosmart_prod
+  host: biosmart-prod-cluster.cluster-cvij7t7ozqay.ap-southeast-2.rds.amazonaws.com
+  pool: 5
+  username: 'dbuser'
+  password: 'TyyLD9NMQTNHAn74'

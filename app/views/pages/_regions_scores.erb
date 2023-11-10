@@ -1,0 +1,60 @@
+  <div class="row border border-1 rounded-1 text-center flex-nowrap flex-shrink-1 p-2" >
+    <div class="col-sm flex-nowrap flex-shrink-1" ><b>
+    From - </b><%= object.get_date_range_for_report(format: true).join('<p style="padding-top:5px;margin-bottom:0;"><b>To - </b>').html_safe %></p></div>
+    <div class="col-sm flex-nowrap flex-shrink-1 fw-bold">Observation Score</div>
+    <div class="col-sm flex-nowrap flex-shrink-1 fw-bold">Species Score</div>
+    <div class="col-sm flex-nowrap flex-shrink-1 fw-bold">Activity Score</div>
+  </div>
+
+  <% if @region.neighboring_regions.count > 0 %>
+    <div class="row text-left border border-1 rounded-1 p-2 flex-nowrap flex-shrink-1">
+      <div class="col-sm text-center fw-bold flex-nowrap flex-shrink-1">Total vs Locality </div>
+      <div class="col-sm text-center flex-nowrap flex-shrink-1">
+        <%= object.get_regions_score(region_type: 'locality', score_type: 'observations_score').to_f %> %
+      </div>
+      <div class="col-sm text-center flex-nowrap flex-shrink-1">
+        <%= object.get_regions_score(region_type: 'locality', score_type: 'species_score').to_f %> %</div>
+      <div class="col-sm text-center flex-nowrap flex-shrink-1">
+        <%= object.get_regions_score(region_type: 'locality', score_type: 'people_score').to_f %> %</div>
+    </div>
+
+    <div class="row text-center border border-1 rounded-1 p-2 flex-nowrap flex-shrink-1">
+      <div class="col-sm fw-bold flex-nowrap flex-shrink-1">Total vs Greater Region</div>
+      <div class="col-sm text-center flex-nowrap flex-shrink-1">
+        <%= object.get_regions_score(region_type: 'greater_region', score_type: 'observations_score').to_f %> %
+      </div>
+      <div class="col-sm text-center flex-nowrap flex-shrink-1">
+        <%= object.get_regions_score(region_type: 'greater_region', score_type: 'species_score').to_f %> %
+      </div>
+      <div class="col-sm text-center flex-nowrap flex-shrink-1">
+        <%= object.get_regions_score(region_type: 'greater_region', score_type: 'people_score').to_f %> %
+      </div>
+    </div>
+  <% end %>
+  <div class="row text-center border border-1 rounded-1 p-2 flex-nowrap flex-shrink-1">
+    <div class="col-sm fw-bold flex-nowrap flex-shrink-1">This Year vs Total</div>
+    <div class="col-sm text-center flex-nowrap flex-shrink-1">
+      <%= object.get_yearly_score(score_type: 'observations_score', num_years: 1).to_f %> %
+    </div>
+    <div class="col-sm text-center flex-nowrap flex-shrink-1">
+      <%= object.get_yearly_score(score_type: 'species_score', num_years: 1).to_f %> %
+    </div>
+    <div class="col-sm text-center flex-nowrap flex-shrink-1">
+      <%= object.get_yearly_score(score_type: 'people_score', num_years: 1).to_f %> %
+    </div>
+  </div>
+
+  <div class="row text-center border border-1 rounded-1 p-2 flex-nowrap flex-shrink-1">
+    <div class="col-sm fw-bold flex-nowrap flex-shrink-1">Last Two Years vs Total</div>
+    <div class="col-sm text-center flex-nowrap flex-shrink-1">
+      <%= object.get_yearly_score(score_type: 'observations_score', num_years: 2).to_f %> %
+    </div>
+    <div class="col-sm text-center flex-nowrap flex-shrink-1">
+      <%= object.get_yearly_score(score_type: 'species_score', num_years: 2).to_f %> %
+    </div>
+    <div class="col-sm text-center flex-nowrap flex-shrink-1">
+      <%= object.get_yearly_score(score_type: 'people_score', num_years: 2).to_f %> %
+    </div>
+  </div>
+
+

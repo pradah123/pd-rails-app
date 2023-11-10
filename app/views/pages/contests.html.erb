@@ -1,0 +1,33 @@
+
+<div class="row justify-content-center my-5">
+  <div class="col-4">
+    <button type="button" class="btn btn-warning w-100" data-bs-toggle="modal" data-bs-target="#contest_modal">+ New Contest</button>
+  </div>
+</div>
+
+<div class="row my-5">
+  <div class="col-3 fw-bold">Contest</div>
+  <div class="col-3 fw-bold">Start Date</div>
+  <div class="col-2 fw-bold">End Date</div>
+  <div class="col-1 fw-bold">Status</div>
+  <div class="col-3"></div>
+</div>
+
+<% @contests.each do |c| %>
+  <div class="row mb-3">
+  	<div class="col-3"><%= c.title %></div>
+  	<div class="col-3"><%= c.starts_at.strftime '%Y/%m/%d %H:%M' %></div>
+  	<div class="col-2"><%= c.ends_at.strftime '%Y/%m/%d %H:%M' %></div>
+  	<div class="col-1"><%= c.status %></div>
+  	<div class="col-3">
+      <a role="button" class="btn btn-secondary" href="<%= c.get_path %>" target="_blank">View</a>
+      <a role="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#contest_<%= c.id %>_modal">Edit</a>
+    </div>
+  </div>
+<% end %>
+
+<% @contests.each do |c| %>
+  <%= render partial: 'contest_form', locals: { contest: c, id: "contest_#{ c.id }_modal", title: 'Edit Contest' } %>
+<% end %>
+
+<%= render partial: 'contest_form', locals: { contest: nil, id: "contest_modal", title: 'Create a Contest' } %>

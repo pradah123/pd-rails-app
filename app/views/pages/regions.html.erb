@@ -1,0 +1,45 @@
+
+<div class="row justify-content-center my-5">
+  <div class="col-4">
+    <button type="button" class="btn btn-warning w-100" data-bs-toggle="modal" data-bs-target="#region_modal">+ New Region</button>
+  </div>
+</div>
+
+<div class="row my-5">
+  <div class="col-3 fw-bold">Region</div>
+  <div class="col-6 fw-bold">Description</div>
+  <div class="col-3"></div>
+</div>
+
+
+<% @regions.each do |r| %>
+  <div class="row mb-3">
+  	<div class="col-3 d-flex align-items-center">
+      <% if !r.region_url.blank? %>
+        <a href="<%= r.region_url %>"><%= r.name %></a>
+      <% else %>
+        <%= r.name %>
+      <% end %>
+    </div>
+    <% if r.description %>
+  	  <div class="col-6 d-flex align-items-center"><%= r.description.truncate_words 10 %></div>    
+    <% else %>
+      <div class="col-6 d-flex align-items-center"> - </div>
+    <% end %>
+  	<div class="col-3">
+      <a role="button" class="btn btn-secondary" href="<%= r.get_path %>" target="_blank">View</a>
+      <a role="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#region_<%= r.id %>_modal">Edit</a>
+    </div>
+  </div>
+<% end %>
+
+<%= render partial: 'region_form', locals: { region: nil, id: "region_modal", title: 'Create a Region' } %>
+
+<% @regions.each do |r| %>
+  <%= render partial: 'region_form', locals: { region: r, id: "region_#{ r.id }_modal", title: 'Edit Region' } %>
+<% end %>
+
+<div class="row mb-5"></div>
+
+<%= paginate @regions %>
+

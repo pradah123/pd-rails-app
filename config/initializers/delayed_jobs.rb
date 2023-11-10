@@ -1,0 +1,9 @@
+Delayed::Worker.destroy_failed_jobs = false
+Delayed::Worker.sleep_delay = 60
+Delayed::Worker.max_attempts = 1
+Delayed::Worker.max_run_time = 240.minutes # GBif fetch job may run longer than 60 minutes if a region has more than 100k records
+Delayed::Worker.read_ahead = 10
+Delayed::Worker.default_queue_name = 'default'
+Delayed::Worker.raise_signal_exceptions = :term
+Delayed::Worker.logger = Logger.new( File.join Rails.root, 'log', 'delayed_job.log' )
+Delayed::Worker.logger.level = Logger::INFO

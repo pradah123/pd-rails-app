@@ -1,0 +1,14 @@
+{
+  "name": "Biosmart",
+  "short_name": "biosmart",
+  "display": "standalone",
+  "theme_color": "rgb(214, 50, 42)",
+  "background_color": "#ffffff",
+  "orientation": "portrait",
+  "scope": "/",
+  "start_url": "/",
+  "icons": [
+    { "src": "/logo-192.png", "type": "image/png", "sizes": "192x192" },
+    { "src": "/logo-512.png", "type": "image/png", "sizes": "512x512" }
+  ]
+}

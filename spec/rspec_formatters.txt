@@ -1,0 +1,14 @@
+The default RSpec output is in the “progress” format.
+
+With this format you see dots (.) representing 1 passing test each, 
+an F for a failed test (expected & actual don’t match), or an E for an error.
+
+But there are alternative formatting options you can use.
+
+Here’s a list:
+
+progress
+documentation (or doc)
+json
+html
+You can enable them with the -f flag (or --format)

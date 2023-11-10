@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  observation_id: 1
+  url: 
+  url_thumbnail: MyString
+  license_code: MyString
+  attribution: MyString
+
+two:
+  observation_id: 1
+  url: 
+  url_thumbnail: MyString
+  license_code: MyString
+  attribution: MyString

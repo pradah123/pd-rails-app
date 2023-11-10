@@ -1,0 +1,22 @@
+<div class="row mt-5">
+  <div class="col-1">
+    <%= i %>.
+  </div>  
+  <div class="col-2">
+    <img src="<%= r.logo_image_url.nil? ? r.logo_image : r.logo_image_url %>" class="img-fluid" style="width:70px;" loading="lazy">
+  </div>
+  <div class="col-7">
+    <div class="row">
+      <div class="col h4">
+        <a href="<%= r.get_region_contest_path observations_object.contest %>" class="region-title-link"><%= r.name %></a>
+      </div>
+    </div>
+  </div>
+  <div class="col-2 d-flex justify-content-end">
+    <%# if show_more_link==true %>
+      <!--a href="<%#= r.get_region_contest_path observations_object.contest %>" class="text-muted d-flex align-middle">view</a-->
+    <%# end %>
+	</div>
+</div>
+
+<%= render partial: 'statistics', locals: { object: observations_object } %>

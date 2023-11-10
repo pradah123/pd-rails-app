@@ -1,0 +1,167 @@
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+<script>
+  $(function() {
+    var contest_filter = '[]';
+    var region_id;
+    <% if !region.nil? %>
+      contest_filter = '<%= escape_javascript region.contests.where("(contests.utc_starts_at < '#{Time.now}' OR contests.utc_starts_at > '#{Time.now}') AND contests.last_submission_accepted_at > '#{Time.now}'").collect {|p| "#{p['id']}" }.to_json.html_safe %>';
+      region_id = '<%= region.id %>';
+    <% end %>
+    set_contest_filter(contest_filter, region_id);
+
+  });
+</script>
+<% modalid = region.nil? ? 'new' : region.id %>
+
+<div class="modal fade region-modal region-modal-<%= modalid %>" tabindex="-1" id="<%= id %>" data-id="<%= region.nil? ? '' : region.id %>">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title fw-heavy"><%= title %></h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+        <div class="row">
+          <div class="col-12 col-lg-6 mb-3">
+            <div class="input-group">
+              <input type="text" class="form-control name_region" placeholder="Region Name (required)" required="required" value="<%= region.nil? ? '' : region.name %>">
+            </div>
+          </div>
+          <div class="col-12 col-lg-6 mb-3">
+            <div class="input-group">
+              <input type="url" class="form-control region_url_region" placeholder="Region Url" value="<%= region.nil? ? '' : region.region_url %>">
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-12 col-lg-6 mb-3">
+            <div class="input-group">
+              <textarea type="text" class="form-control description_region d-flex align-items-stretch" style="resize: vertical;min-height: 100px;" placeholder="Description - (required)" required="required"><%= region.nil? ? '' : region.description %></textarea>
+            </div>
+          </div>
+          <div class="col-12 col-lg-6 mb-3">
+            <div class="input-group">
+              <% if region %>
+                <% contest_select_id = "contest_filter_" + region.id.to_s %>
+
+                <%= select_tag(contest_select_id,
+                    options_for_select(Contest.in_progress_or_upcoming.collect {|p| [ p['title'], p['id'] ] },
+                                      region.contests.where("contests.utc_starts_at < '#{Time.now}' AND contests.last_submission_accepted_at > '#{Time.now}'").collect {|p| "p['id']" }
+                                      ),
+                    { :class => "form-select contest_filter", :multiple => true }
+                  )
+                %>
+              <% else %>
+                <%= select_tag(:contest_filter,
+                    options_for_select(Contest.in_progress_or_upcoming.collect {|p| [ p['title'], p['id'] ] },
+                                       params[:contest_filter]),
+                    { :class => "form-select contest_filter", :multiple => true }
+                  )
+                %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+
+
+
+        <div class="row">
+          <div class="col-12 col-lg-6 my-5">
+            <div class="row">
+              <div class="col">    
+                <label for="Image" class="form-label">Logo Image (required)</label>
+                <input type="url" class="form-control logo_url_region" placeholder="Image Url" required="required" value="<%= region.nil? ? '' : region.logo_image_url %>">
+                <div class="w-100 text-center my-3">or</div>
+                <input class="form-control logo-region logo-frame-<%= modalid %>" type="file" data-frame-id="<%= modalid %>">
+                <button class="btn btn-primary mt-3 logo-region-remove" data-frame-id="<%= modalid %>">Remove Image</button>
+              </div>
+            </div>  
+            <div class="row">
+              <div class="col">  
+                <img src="<%= region && region.logo_image ? region.logo_image : '' %>" class="img-fluid m-3 logo-frame-<%= modalid %>" />
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-lg-6 my-5">
+            <div class="row">
+              <div class="col">    
+                <label for="Image" class="form-label">Header Image</label>
+                <input type="url" class="form-control header_url_region" placeholder="Image Url" required="required" value="<%= region.nil? ? '' : region.header_image_url %>">
+                <div class="w-100 text-center my-3">or</div>
+                <input class="form-control header-region header-frame-<%= modalid %>" type="file" data-frame-id="<%= modalid %>">
+                <button class="btn btn-primary mt-3 header-region-remove" data-frame-id="<%= modalid %>">Remove Image</button>
+              </div>
+            </div>  
+            <div class="row">
+              <div class="col">  
+                <img src="<%= region && region.header_image ? region.header_image : '' %>" class="img-fluid m-3 header-frame-<%= modalid %>" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-12 col-lg-6 mb-3">
+            <label for="latlng" class="form-label">Latitude and Longitude</label>
+            <div class="input-group">
+              <input type="text" class="form-control region_lat_lng" placeholder="Latitude,Longitude" value="<%= region && region.lat_input && region.lng_input? ? "#{region.lat_input},#{region.lng_input}" : '' %>">
+            </div>
+          </div>
+          <div class="col-12 col-lg-6 mb-3">
+            <label for="side_length" class="form-label">Polygon Side Length(in km)</label>
+
+            <div class="input-group">
+              <input type="text" class="form-control region_polygon_side" placeholder="1" value="<%= region && region.polygon_side_length ? region.polygon_side_length : '' %>">
+            </div>
+          </div>
+        </div>
+        <div class="row justify-content-center">
+          <div class="w-100 text-center my-3">or</div>
+        </div>
+
+        <div class="row justify-content-center">
+          <div class="col-10">
+            <label class="form-label">Region Boundaries</label>
+            <div class="row my-3">
+              <div class="col" id="map-<%= id %>" style="width:100%; height:400px;"></div>
+            </div>
+            <div class="row">
+              <div class="col" id="polygon-json-<%= id %>">              
+                <%= render partial: 'polygon', locals: { p: nil, remove_button_disabled: true } %>
+                <% if region && !region.raw_polygon_json.blank? %>
+                  <% JSON.parse(region.raw_polygon_json).map { |json| JSON.generate json }.each do |p| %>
+                    <%= render partial: 'polygon', locals: { p: p, remove_button_disabled: false } %>
+                  <% end %>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row justify-content-center my-5">
+          <div class="col-8">
+            <div class="form-group">
+              <button class="btn btn-outline-secondary w-100 region_save_action" data-id="<%= region.nil? ? 'new' : region.id %>">Save</button>
+            </div>
+          </div>
+        </div>
+        <div class="row justify-content-center mb-3">
+          <div class="col-8 validation-messages">
+            <span class="text-danger validation-ok name_region_v">Region name is required.</span>
+            <span class="text-danger validation-ok description_region_v">Description is required.</span>
+            <span class="text-danger validation-ok polygon_json_region_v">Polygon data must be in GeoJson Polygon format.</span>
+            <span class="text-danger validation-ok region_polygon_side_v">Polygon side length must be an integer or decimal.</span>
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

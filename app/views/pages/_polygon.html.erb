@@ -1,0 +1,10 @@
+<div class="row polygon-json">
+  <div class="col">
+    <div class="input-group mb-3">
+      <span class="input-group-text polygon-colour">Polygon: </span>
+      <input type="text" class="form-control" placeholder="Enter Polygon GeoJson" value="<%= p.nil? ? '' : p %>" <%= p.nil? ? '' : 'readonly' %>>
+      <button class="btn btn-outline-secondary polygon-draw" type="button">Draw</button>
+      <button class="btn btn-outline-secondary polygon-remove" type="button" <%= remove_button_disabled ? 'disabled' : '' %>>Remove</button>
+    </div>
+  </div>  
+</div>

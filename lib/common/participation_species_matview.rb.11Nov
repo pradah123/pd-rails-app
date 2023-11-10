@@ -1,0 +1,53 @@
+class ParticipationSpeciesMatview < ActiveRecord::Base
+  self.table_name = 'participation_species_matview'
+
+  scope :has_scientific_name, -> { where.not scientific_name: @@filtered_scientific_names }
+  scope :has_accepted_name, -> { where.not accepted_name: @@filtered_scientific_names }
+  scope :from_observation_org, -> { joins(:data_source).where(data_sources: { name: 'observation.org' }) }
+  scope :ignore_species_code, -> { where('accepted_name != lower(accepted_name)') }
+  scope :has_images, -> { where.not url: nil }
+
+  @@filtered_scientific_names = [nil, 'homo sapiens', 'Homo Sapiens', 'Homo sapiens']
+
+
+  def readonly?
+    true
+  end
+
+  def self.get_top_species_with_images(participation_id:, offset:, limit:)
+    if offset.present? && limit.present?
+      top_species = ::ParticipationSpeciesMatview.where(participation_id: participation_id)
+                                                 .has_images
+                                                 .select(:scientific_name, :common_name, :species_count, :url)
+                                                 .offset(offset)
+                                                 .limit(limit)
+                                                 .order('species_count' => 'desc')
+    else
+      top_species = ::ParticipationSpeciesMatview.where(participation_id: participation_id)
+                                                 .has_images
+                                                 .select(:scientific_name, :common_name, :species_count, :url)
+                                                 .order('species_count' => 'desc')
+    end
+    return top_species.as_json
+  end
+
+  def self.get_top_species(participation_id:, offset:, limit:)
+    if offset.present? && limit.present?
+      top_species = ::ParticipationSpeciesMatview.where(participation_id: participation_id)
+                                                 .select(:scientific_name, :common_name, :species_count)
+                                                 .offset(offset)
+                                                 .limit(limit)
+                                                 .order('species_count' => 'desc')
+    else
+      top_species = ::ParticipationSpeciesMatview.where(participation_id: participation_id)
+                                                 .select(:scientific_name, :common_name, :species_count)
+                                                 .order('species_count' => 'desc')
+    end
+    return top_species.as_json
+  end
+
+  def self.refresh
+    ActiveRecord::Base.connection.execute('REFRESH MATERIALIZED VIEW participation_species_matview')
+  end
+
+end

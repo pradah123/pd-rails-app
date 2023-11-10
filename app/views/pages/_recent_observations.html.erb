@@ -1,0 +1,41 @@
+<div class="row justify-content-center mt-5" id="recent_observations">
+  <div class="col-10">
+    <div class="row my-5">
+      <div class="col">
+      	<div class="row">
+      	  <div class="col h4 text-center proxima section-header mb-3">Recent Observations</div>
+      	</div>
+        <div class="row justify-content-center mt-5">
+          <form class="input-group justify-content-center" id="search">
+            <div class="col-4 px-1">
+              <%= select_tag(:category_filter,
+                            options_for_select(@category_mapping.collect {|p| [ p['name'], p['name'] ] }),
+                            { :class => "form-select", :selected => "All Categories"})
+              %>
+            </div>
+            <div class="col-5 justify-content-left px-1">
+              <input type="text" class="form-control" placeholder="Search Observations" autocomplete="off" id="search_input">
+            </div><div class="col-2 px-1">
+              <button class="btn btn-outline-secondary" type="button" id="search_clear"> <img src="<%= asset_path 'cross.svg' %>" class="align-text-top" style="height:24px;"></button>             
+              <button class="btn btn-outline-secondary" type="button" id="search_button"> <img src="<%= asset_path 'search.svg' %>" class="align-text-top" style="height:24px;"></button>
+            </div>
+          </form>
+        </div>
+        <div class="row justify-content-center mt-2 mb-5">
+          <div class="col-2"></div>
+          <div class="col-8 d-flex justify-content-end">
+            <span class="me-1" id="nobservations"></span>
+            <span class="mx-1" id="nobservations_noimage"></span>
+          </div>
+        </div>             
+      	<div class="row" id="observations-block">
+        </div>
+        <div class="row justify-content-center mt-5">
+          <div class="col-4">
+            <button type="button" class="btn btn-warning w-100" id="show_more" data-api-parameters="<%= api_parameters %>" data-n-per-fetch="<%= @nobservations %>">Show more</button>
+          </div>              
+        </div>  
+      </div>      
+    </div>
+  </div>
+</div> 

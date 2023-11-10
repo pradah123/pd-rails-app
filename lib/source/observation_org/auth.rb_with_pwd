@@ -1,0 +1,101 @@
+require_relative './models/auth_data.rb'
+require_relative './repo.rb'
+
+module Source
+    class ObservationOrg
+        class Auth
+            LOGIN_URL = 'https://waarneming.nl/api/v1/oauth2/token/'.freeze
+            REFRESH_URL = 'https://observation.org/api/v1/oauth2/token/'.freeze
+
+            def self.post(body, to_url)
+                response_hash = {}
+                response = HTTParty.post(
+                    to_url, 
+                    body: body,
+                    debug_output: $stdout
+                )
+                if !response.unauthorized? && !response.body.nil?
+                    response_hash = JSON.parse(response.body)
+                    response_hash['expires_at'] = Time.now.to_i + response_hash['expires_in'].to_i - (15*60)
+                end
+                auth_data = ObservationOrg::Model::AuthData.new(response_hash)
+                return auth_data
+            end
+
+            # login() -> ObservationOrg::Model::Auth
+            def self.login(auth_data)
+                if auth_data.access_token_valid?
+                    return auth_data
+                end
+                return post(
+                    {
+                        # client_id: ENV.fetch('OBSERVATION_ORG_CLIENT_ID'),
+                        # grant_type: 'password',
+                        # email: ENV.fetch('OBSERVATION_ORG_EMAIL'),
+                        # password: ENV.fetch('OBSERVATION_ORG_PASSWORD')
+                        client_id: 'QJj8c2FY7lptAvNg3h31PzMKkRLU5wMiRg9xFDAO',
+                        grant_type: 'password',
+                        email: 'priyank@earthguardians.life',
+                        password: 'b1uebott!e'
+                    }, 
+                    LOGIN_URL
+                )
+            end
+
+            # fetch_auth_data_from_refresh_token(String) -> ObservationOrg::Model::Auth
+            def self.fetch_auth_data_from_refresh_token(auth_data)
+                if auth_data.access_token_valid?
+                    return auth_data
+                end
+                if !auth_data.refresh_token_valid?
+                    return auth_data
+                end
+                return post(
+                    {
+                        client_id: 'QJj8c2FY7lptAvNg3h31PzMKkRLU5wMiRg9xFDAO',
+                        grant_type: 'refresh_token',
+                        refresh_token: auth_data.refresh_token
+                    },
+                    REFRESH_URL
+                )
+            end
+
+            def self.cache(auth_data)
+                ObservationOrg::Repo.cache({
+                    access_token: auth_data.access_token,
+                    refresh_token: auth_data.refresh_token,
+                    expires_at: auth_data.expires_at
+                })
+
+                return auth_data
+            end
+
+            def self.get_auth_data_from_cache()
+                auth_data = ObservationOrg::Model::AuthData.new(
+                    ObservationOrg::Repo.get_cached_auth_data() || {}
+                )
+                
+                return auth_data
+            end
+
+            # get_access_token() -> String
+            def self.get_access_token()
+                auth_data = get_auth_data_from_cache()
+                if auth_data.valid?
+                    return auth_data.access_token
+                end
+                auth_data = fetch_auth_data_from_refresh_token(auth_data)
+                if auth_data.valid?
+                    return cache(auth_data).access_token
+                end
+                auth_data = login(auth_data)
+                if auth_data.valid?
+                    return cache(auth_data).access_token
+                end
+
+                return nil
+            end
+
+        end
+    end
+end

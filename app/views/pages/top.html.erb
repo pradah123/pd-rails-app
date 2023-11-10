@@ -1,0 +1,94 @@
+
+<div class="row justify-content-center mb-5">
+  <div class="col-10">
+    <div class="row my-5 justify-content-center">
+      <div class="col-10 col-md-6 d-flex justify-content-center">
+        <img class="img-fluid" src="<%= asset_path 'logo.png' %>">
+      </div>      
+    </div>
+  </div>
+</div> 
+<%= render partial: 'statistics', locals: { object: nil } %>
+
+<div class="row justify-content-center">
+  <div class="col-10">
+    <div class="row my-3">
+      <div class="col" id="all-regions-map" style="width:100%; height:600px;"></div>  
+      <script>  
+        var _all_regions = <%= JSON.generate(Region.get_all_regions).html_safe %>;   
+      </script>        
+    </div>
+  </div>
+</div>
+
+<%= render partial: 'recent_observations', locals: { observations: @observations, api_parameters: "?" } %>
+
+<% if Contest.in_progress.online.count>0 %>
+  <div class="row justify-content-center">
+    <div class="col-10">
+      <div class="row my-3">
+        <div class="col">
+          <div class="row mb-3">
+            <div class="col h4 text-center proxima section-header mb-3">Contests In Progress</div>
+          </div>
+          <div class="row">
+            <div class="col"  id="contests-block">
+              <% Contest.in_progress.online.ordered_by_starts_at.first(5).each.with_index(1) do |c,i| %>
+                <%= render partial: 'contest_top_page', locals: { c: c, i: i, observations_object: c, show_more_link: false } %>
+              <% end %>
+            </div>    
+          </div>
+          <% if Contest.in_progress.online.count > 5 %>
+            <div class="row justify-content-center mt-5 show_more_contests">
+              <div class="col-4">
+                <button type="button" class="btn btn-warning w-100" id="show_more_contests" data-n-per-fetch="5">Show more contests</button>
+              </div>
+            </div>
+          <% end %>
+        </div>      
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<% if Contest.upcoming.online.count>0 %>
+  <div class="row justify-content-center mt-5">
+    <div class="col-10">
+      <div class="row my-3">
+        <div class="col">
+          <div class="row mb-3">
+            <div class="col h4 text-center proxima section-header mb-3">Upcoming Contests</div>
+          </div>  
+          <div class="row">
+            <div class="col">
+              <% Contest.upcoming.online.ordered_by_starts_at.first(5).each.with_index(1) do |c,i| %>
+                <%= render partial: 'contest_top_page', locals: { c: c, i: i, observations_object: c, show_more_link: false } %>
+              <% end %>
+            </div>    
+          </div>
+        </div>      
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<% if Contest.past.online.count>0 %>
+  <div class="row justify-content-center mt-5">
+    <div class="col-10">
+      <div class="row my-3">
+        <div class="col">
+          <div class="row mb-3">
+            <div class="col h4 text-center proxima section-header mb-3">Past Contests</div>
+          </div>  
+          <div class="row">
+            <div class="col">
+              <% Contest.past.online.ordered_by_starts_at.first(5).each.with_index(1) do |c,i| %>
+                <%= render partial: 'contest_top_page', locals: { c: c, i: i, observations_object: c, show_more_link: false } %>
+              <% end %>
+            </div>    
+          </div>
+        </div>      
+      </div>
+    </div>
+  </div>
+<% end %>

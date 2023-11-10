@@ -1,0 +1,18 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>Scaffold tests</h1>
+
+<div id="scaffold_tests">
+  <% @scaffold_tests.each do |scaffold_test| %>
+    <%= render scaffold_test %>
+    <p>
+      <%= link_to "Show this scaffold test", scaffold_test %>
+    </p>
+  <% end %>
+</div>
+
+<%
+=begin%>
+ <%= link_to "New scaffold test", new_scaffold_test_path %> 
+<%
+=end%>

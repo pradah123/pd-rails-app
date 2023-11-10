@@ -1,0 +1,31 @@
+<div class="row justify-content-center flex-nowrap flex-shrink-1 p-2" >
+  <div class="col-2 flex-nowrap flex-shrink-1" style="padding: 0 0 0 0; ">
+    <% if object.logo_image_url || object.logo_image %>
+      <% if !object.region_url.nil? && !object.region_url.blank? %>
+        <a href="<%= object.region_url %>" target="_blank">
+          <img src="<%= (!object.logo_image_url.nil? && !object.logo_image_url.blank?) ? object.logo_image_url : object.logo_image %>" class="float-start" style="max-height:160px;max-width:100%;">
+        </a>
+      <% else %>
+        <img src="<%= (!object.logo_image_url.nil? && !object.logo_image_url.blank?) ? object.logo_image_url : object.logo_image %>" class="float-start" style="max-height:160px;max-width:100%;">
+      <% end %>
+    <% end %>
+  </div>
+  <div class="col-5 flex-nowrap flex-shrink-1" style="padding: 1 0 0 0; " >
+    <%= object.description&.html_safe || '' %>
+  </div>
+  <div class="col-1 flex-nowrap flex-shrink-1"  style="padding: 0 0 0 0; ">
+    <a href="https://sdgs.un.org/goals" target="_blank">
+      <img src="<%= asset_path 'sdgs_goal_3.png' %>" class="float-start me-4 mb-2" style="max-height:160px;max-width:90%;">
+    </a>
+  </div>
+  <div class="col-1 flex-nowrap flex-shrink-1"  style="padding: 0 0 0 0; ">
+    <a href="https://sdgs.un.org/goals" target="_blank">
+      <img src="<%= asset_path 'sdgs_goal_14.png' %>" class="float-start me-4 mb-2" style="max-height:160px;max-width:90%;">
+    </a>
+  </div>
+  <div class="col-1 flex-nowrap flex-shrink-1" style="padding: 0 0 0 0; ">
+    <a href="https://sdgs.un.org/goals" target="_blank">
+      <img src="<%= asset_path 'sdgs_goal_15.png' %>" class="float-start me-4 mb-2" style="max-height:160px;max-width:90%;">
+    </a>
+  </div>
+</div>

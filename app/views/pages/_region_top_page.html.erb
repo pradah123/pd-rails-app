@@ -1,0 +1,13 @@
+<div class="row mt-5">
+  <div class="col-3">
+    <img src="<%= r.logo_image_url.nil? ? r.logo_image : r.logo_image_url %>" class="img-fluid" style="width:35px;" loading="lazy">
+  </div>
+  <div class="col-7">
+    <div class="row">
+      <div class="col h4"><%= r.name %></div>
+    </div>
+  </div>
+  <div class="col-2 d-flex justify-content-end">
+    <a href="<%= r.get_path %>" class="region-title-link">View</a>
+	</div>
+</div>

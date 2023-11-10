@@ -1,0 +1,94 @@
+<% modalid = participation.nil? ? 'new' : participation.id %>
+
+<div class="modal fade participation-modal participation-modal-<%= modalid %>" tabindex="-1" id="<%= id %>" data-id="<%= modalid %>">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title fw-heavy"><%= title %></h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        
+        <% if @user.admin? %>
+          <div class="row justify-content-center mb-5">
+            <div class="col-6 col-lg-4">
+              <div class="input-group">
+                <select class="form-select status_participation">
+                  <% if participation.nil? %>
+                    <option value="submitted" selected disabled>submitted</option>
+                  <% else %>    
+                    <option value="<%= participation.status %>" selected><%= participation.status %></option>
+                     <% if @user.admin? %>
+                      <option value="refused" <%= participation.refused? ? 'selected' : '' %>>refuse</option>
+                      <option value="removed_by_admin" <%= participation.removed_by_admin? ? 'selected' : '' %>>remove</option>
+                    <% else %>
+                      <% if participation.submitted? || participation.accepted? %>   
+                        <option value="removed_by_region" <%= participation.removed_by_region? || participation.removed_by_admin? ? 'selected' : '' %>>remove</option>
+                      <% end %> 
+                    <% end %>
+                  <% end %>  
+                </select>
+              </div>
+            </div>
+          </div>
+        <% end %>
+
+        <div class="row">
+          <div class="col-12 col-lg-6">
+            <label class="form-label">My Regions</label>
+            <div class="input-group">
+              <select class="form-select region_id_participation">
+                <% regions = @user.admin? ? Region.all : @user.regions %>
+                <% regions.each do |r| %>
+                  <option value="<%= r.id %>" <%= participation && participation.region_id==r.id ? 'selected' : '' %>><%= r.name %></option>
+                <% end %>
+              </select>
+            </div>
+          </div>
+          <div class="col-12 col-lg-6">
+            <label class="form-label">Select a Contest</label>
+            <div class="input-group">
+              <select class="form-select contest_id_participation">
+                <% Contest.where(status: Contest.statuses[:online]).each do |c| %>
+                  <option value="<%= c.id %>" <%= participation && participation.contest_id==c.id ? 'selected' : '' %>><a href="/contest/<%= c.id %>"><%= c.title %></a></option>
+                <% end %>
+              </select>
+            </div>
+          </div>
+        </div>
+          
+        <div class="row mt-5">  
+          <div class="col">
+            <div class="input-group">
+              <% DataSource.all.each do |ds| %>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input data-source-<%= modalid %>" type="checkbox" name="data-sources-<%= modalid %>" id="data-source-<%= modalid %>-<%= ds.id %>" <%= participation && participation.data_sources.pluck(:id).include?(ds.id) ? 'checked' : '' %> value="<%= ds.id %>">
+                  <label class="form-check-label" for="data-source-<%= modalid %>-<%= ds.id %>"><%= ds.name %></label>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+
+        <div class="row justify-content-center my-5">
+          <div class="col-8">
+            <div class="form-group">
+              <button class="btn btn-outline-secondary w-100 participation_save_action" data-id="<%= participation.nil? ? 'new' : participation.id %>">Save</button>
+            </div>
+          </div>
+        </div>
+        <div class="row justify-content-center mb-3">
+          <div class="col-8 validation-messages">
+            <span class="text-danger validation-ok organization_name">Title is required.</span>
+            <span class="text-danger validation-ok email">Start date and time is required.</span>
+            <span class="text-danger validation-ok email">End date and time is required.</span>
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

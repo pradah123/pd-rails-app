@@ -1,0 +1,14 @@
+<!doctype html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <p>Dear <%= @user.firstname %>,</p>
+    <p>You requested a one-time login link. Please click <a href="/login?id=<%= @user.id %>&code=<%= @user.login_code %>">here</a> to login.</p>
+    <p>This link will be valid for 10 minutes.</p>
+    <p></p>
+    <p>Best regards,</p>
+    <p>The 1squared team.</p>
+  </body>
+</html>

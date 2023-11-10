@@ -1,0 +1,79 @@
+[
+  {
+    "name":"All Categories"
+  },
+  {
+    "name":"Birds",
+    "class_name":"aves"
+  },
+  {
+    "name":"Arachnids",
+    "class_name":"arachnida"
+  },
+  {
+    "name":"Other Arthropods",
+    "class_name" : "collembola,chilopoda,diplopoda,branchiopoda,ostracoda"
+  },
+  {
+    "name":"Other Insects",
+    "order":"blattodea,embiidina,embioptera,zygentoma,thysanoptera,archaeognatha,microcoryphia,notoptera,plecoptera,siphonaptera,psocodea,ephemeroptera,mecoptera,megaloptera,neuroptera,trichoptera,raphidioptera,strepsiptera,zoraptera,protorthoptera,cnemidolestodea,grylloblattodea,mantophasmatodea,miomoptera,megasecoptera,palaeodictyoptera,protorthoptera,diaphanopterodea,glosselytrodea,caloneurodea,eoblattida,odonata,hemiptera,phasmida,orthoptera"
+  },
+  {
+    "name":"Other Invertebrates",
+    "phylum":"mollusca,annelida,platyhelminthes,porifera,rotifera,nematoda,cnidaria,bryozoa,nemertea,acanthocephala,brachiopoda"
+  },
+  {
+    "name":"Crustaceans",
+    "class_name":"malacostraca"
+  },
+  {
+    "name":"Mammals",
+    "class_name":"mammalia"
+  },
+  {
+    "name":"Amphibians",
+    "class_name":"amphibia"
+  },
+  {
+    "name":"Reptiles",
+    "class_name":"reptilia"
+  },
+  {
+    "name":"Insects - Butterflies and Moths",
+    "order":"lepidoptera"
+  },
+  {
+    "name":"Fungi and Friends",
+    "kingdom":"fungi"
+  },
+  {
+    "name":"Plants that do not flower",
+    "class_name":"polypodiopsida,pinopsida,cycadopsida,lycopodiopsida",
+    "phylum":"bryophyta,marchantiophyta,charophyta,glaucophyta,anthocerotophyta"
+  },
+  {
+    "name":"Plants that flower",
+    "class_name":"magnoliopsida,liliopsida"
+  },
+  {
+    "name":"Fish",
+    "class_name":"actinopterygii"
+  },
+  {
+    "name":"Insects - Beetles",
+    "order":"coleoptera"
+  },
+  {
+    "name":"Insects - Ants, Bees and Wasps",
+    "order":"hymenoptera"
+  },
+  {
+    "name":"Insects - Flies",
+    "order":"diptera"
+  },
+  {
+    "name":"Other Life",
+    "kingdom":"bacteria,chromista,protozoa,viruses,archaea",
+    "phylum":	"rhodophyta,chlorophyta"
+  }
+]

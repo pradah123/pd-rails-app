@@ -1,0 +1,170 @@
+<!doctype html>
+<html class="w-100 h-100">
+  <head>
+    <title>Biosmart</title>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+
+
+    <link rel="shortcut icon" href="https://biosmart-ui.s3.ap-southeast-2.amazonaws.com/favicon.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;700&family=Montserrat:wght@100;300;400;700&display=swap" rel="stylesheet">
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDk0XtLWwmaLuH6tOZe8PwzibvOQiZ4RNg&libraries=drawing&libraries=drawing&v=weekly"></script>
+    <script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js"></script>
+    <%= stylesheet_link_tag "application", media: "all", "data-turbolinks-track" => "reload" %>
+  </head>
+
+  <body class="d-flex flex-column w-100 h-100">
+
+    <% @banner_messages.each do |m| %>
+      <div class="flex-shrink-0 m-0 p-0 py-2 d-flex justify-content-center" style="background-color: <%= m.background_colour %>">
+        <div class="container-fluid m-0 p-0">
+          <div class="row p-0 m-0">
+            <div class="col d-flex justify-content-center" style="color:<%= m.text_colour %>">
+              <%= m.message %>
+            </div>
+          </div>
+        </div>  
+      </div>
+    <% end %>
+
+    <header class="flex-shrink-0 m-0 p-0 py-4 pb-3">
+      <div class="container-fluid m-0 p-0">
+        <div class="row justify-content-center p-0 m-0">
+        <div class="col-2"></div>
+          <div class="col-12 col-lg-5 p-0 m-0 logo-header position-relative">
+            <a href="/" class="btn float-start py-2 px-3 fw-home proxima text-uppercase text-white" role="button">biosmart.life | portal</a>
+          </div>
+          
+        </div>
+      </div>  
+    </header>   
+     <main class="flex-shrink-0 m-0 p-0 mb-5">
+      <div class="container-fluid mt-3">
+        <%= yield %>
+        <%
+=begin%>
+ <div class="row justify-content-center">
+          <div class="col-12 col-md-10">
+            <%= yield %>
+          </div>
+        </div> 
+<%
+=end%>
+      </div>
+    </main>
+    <footer class="footer mt-auto pt-5 border-0">
+      <div class="row justify-content-center mb-5">
+        <div class="col-12 col-md-8 proxima text-uppercase d-flex justify-content-center">
+          Powered by Observations from
+        </div>  
+      </div>  
+      <div class="row justify-content-center mb-5">
+        <div class="col-12 col-md-8">
+          <div class="row"> 
+            <div class="col">
+              <img src="<%= asset_path 'inaturalist.jpeg' %>" class="w-50 m-auto mt-2 d-block">
+            </div>
+            <div class="col">
+              <img src="<%= asset_path 'ebird.png' %>" class="w-50 m-auto mt-2 d-block">
+            </div>
+            <div class="col">
+              <img src="<%= asset_path 'citsci.jpg' %>" class="w-75 m-auto mt-3 d-block">
+            </div>
+            <div class="col">
+              <img src="<%= asset_path 'naturespots.png' %>" class="w-75 m-auto mt-4 d-block" >
+            </div>
+            <div class="col">
+              <img src="<%= asset_path 'observationdotorg.png' %>" class="w-100 mx-auto mt-4 d-block">
+            </div>
+            <div class="col">
+              <img src="<%= asset_path 'questagame.png' %>" class="w-50 m-auto d-block">
+            </div>
+            <div class="col">
+              <img src="<%= asset_path 'mushroom_observer.png' %>" class="w-50 m-auto mt-2 d-block">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row justify-content-center mt-5">
+        <div class="col-12 col-md-8">      
+          <div class="row">
+
+            <div class="col-5">
+              <figure style="max-width:948px;">
+                <div style="position: relative; padding-bottom:13.713079452514648%; overflow: hidden;">
+                  <img style="left: -0.0263852%; top: 0%; width: 100.053%; height: 100%; position: absolute;" alt="UN Report.png" src="https://images.squarespace-cdn.com/content/v1/5cd7958065a707a8fbfb8e3c/1557647684552-P6YYV29TW8HR89PJFQN8/UN+Report.png?format=500w">
+                </div>
+              </figure>
+            </div>
+
+            <div class="col-2">
+              <figure style="max-width:318px;">
+                <div style="position: relative; padding-bottom:49.6855354309082%; overflow: hidden;">
+                  <img style="left: 0%; top: -0.067731%; width: 100%; height: 100.135%; position: absolute;" alt="download-2.png" src="https://images.squarespace-cdn.com/content/v1/5cd7958065a707a8fbfb8e3c/1632456130742-0WFRKWVVGFVWC9867Q56/download-2.png?format=300w">
+                </div>
+              </figure>
+            </div>
+            
+            <div class="col-5">
+              <figure style="max-width:2000px;">
+                <div style="position: relative; padding-bottom:12.5%; overflow: hidden;">
+                  <img style="left: 0%; top: -0.398936%; width: 100%; height: 100.798%; position: absolute;" alt="unnamed-2.jpg" src="https://images.squarespace-cdn.com/content/v1/5cd7958065a707a8fbfb8e3c/1557647707745-S0OH7KKLGPFFPRGIVRKK/unnamed-2.jpg?format=500w">
+                </div>
+              </figure>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="row justify-content-center pt-5" style="background: #f7f7f7; font-size: 18px;">
+        <div class="col-12 col-md-8">
+          <div>
+            <div class="row">
+              <div class="col">
+                <div class="row">
+                  <div class="col-2">
+                    <figure style="max-width:180px;">
+                      <div style="position: relative; padding-bottom:35%; overflow: hidden;">        
+                        <img style="left: -0.163577%; top: 0%; width: 100.327%; height: 100%; position: absolute;" src="https://images.squarespace-cdn.com/content/v1/5cd7958065a707a8fbfb8e3c/6df5dffd-6878-41d3-a7db-8c0045217e04/Cc-by-nc-nd_icon.svg.png?format=300w">
+                      </div>
+                    </figure>
+                  </div>
+                  <div class="col">
+                    <p style="text-align:center;white-space:pre-wrap;line-height: 1.6em;" class="">Unless otherwise stated, all records on this site are licensed under a CC BY-NC-ND license, with the licensing rights belonging to the original provider of the record. If you are uncertain about your rights to use this data, please err on the side of the strictest possible interpretation of rights. If you have any questions, please <a class="footer-link" href="https://www.biosmart.life/connect">contact us</a>.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row justify-content-center pt-5" style="background: #1f1f1f;">
+        <div class="col-12 col-md-8 border-0" id="footer-links">
+          <p>Website copyright BioSMART.LIFE<br>
+            <a href="https://biosmart.life/bioscore">BioSCORE Reporting</a> | <a href="https://biosmart.life/cnc">The BioExpertise Engine</a> | <a href="https://www.biosmart.life/apps">Supported Apps</a>
+          </p>
+        </div>
+      </div>  
+    </footer>
+    </body>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js" integrity="sha256-0H3Nuz3aug3afVbUlsu12Puxva3CP4EhJtPExqs54Vg=" crossorigin="anonymous"></script>
+  <% if @user %>
+    <script>var _user_id = <%= @user.id %>;</script>
+  <% end %>  
+  
+</html>

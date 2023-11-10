@@ -1,0 +1,54 @@
+
+<div class="row justify-content-center">
+  <div class="col-12 col-lg-10 d-flex justify-content-center proxima section-header h2 fw-bold text-dark text-center mt-5">
+    <a href="<%= @region.get_path %>" class="proxima section-header h2 fw-bold text-dark"><%= @region.name %></a>
+  </div>
+</div>
+
+<div class="row justify-content-center">
+  <div class="col-12 col-lg-10 d-flex justify-content-center section-header h5 text-dark text-center mt-5">
+    participating in
+  </div>
+</div>
+
+
+<div class="row justify-content-center">
+  <div class="col-12 col-lg-10 d-flex justify-content-center text-center my-5">
+    <a href="<%= @contest.get_path %>" class="proxima section-header h2 fw-bold text-dark"><%= @contest.title %></a>
+  </div>
+</div>
+
+<div class="row justify-content-center">
+  <div class="col-12 col-lg-10 d-flex justify-content-center fw-bold h6">
+    For observations made between <%= @contest.starts_at.strftime '%Y/%m/%d' %> and <%= @contest.ends_at.strftime '%Y/%m/%d' %></div>
+  </div>
+</div>
+
+<div class="row justify-content-center">
+  <div class="col-12 col-lg-10 d-flex justify-content-center fs-italic h6">  
+    Submissions accepted up to <%= @contest.last_submission_accepted_at.strftime '%Y/%m/%d' %></div>
+  </div>
+</div>
+
+<% if !@region.raw_polygon_json.blank? && @region.raw_polygon_json!='[]' %>
+  <div class="row justify-content-center mt-5">
+    <div class="col-10">
+      <div class="row my-3">
+        <div class="col" id="region-map" style="width:100%; height:400px;"></div>  
+        <script>  
+          var _polygon_json = <%= @region.raw_polygon_json.html_safe %>;
+          var _observations_filename = "/observations/participation/<%= @region.participations.where(contest_id: @contest.id).first.id %>";
+          var _subregions = [];
+        </script>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<%= render partial: 'region_details', locals: { object: @region } %>
+
+<%= render partial: 'statistics', locals: { object: @region.participations.where(contest_id: @contest.id).first } %>
+
+<%= render partial: 'species_people_rankings', locals: { object: @region.participations.where(contest_id: @contest.id).first } %>
+
+<%= render partial: 'recent_observations', locals: { observations: @observations, api_parameters: "?contest_id=#{ @contest.id }&region_id=#{ @region.id }" } %>

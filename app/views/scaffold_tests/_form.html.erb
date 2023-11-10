@@ -1,0 +1,17 @@
+<%= form_with(model: scaffold_test) do |form| %>
+  <% if scaffold_test.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(scaffold_test.errors.count, "error") %> prohibited this scaffold_test from being saved:</h2>
+
+      <ul>
+        <% scaffold_test.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

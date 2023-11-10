@@ -1,0 +1,197 @@
+<% if !@region.header_image_url.blank? || !@region.header_image.blank? %>
+  <div class="row m-0 p-0">
+    <div class="col d-flex justify-content-center">
+    <% if @region.header_image_url || @region.header_image%>
+      <% if !@region.region_url.nil? && !@region.region_url.blank? %>
+        <a href="<%= @region.region_url %>" target="_blank">
+          <img src="<%= (!@region.header_image_url.nil? && !@region.header_image_url.blank?) ? @region.header_image_url : @region.header_image %>" class="img-fluid">
+        </a>
+      <% else %>
+      <img src="<%= (!@region.header_image_url.nil? && !@region.header_image_url.blank?) ? @region.header_image_url : @region.header_image %>" class="img-fluid">
+      <% end %>
+    <% end %>
+    </div>    
+  </div>
+<% end %>  
+
+<div class="row justify-content-left mb-5 flex-nowrap flex-shrink-1">
+  <div class="col-1 flex-nowrap flex-shrink-1"></div>
+  <div class="col-8 flex-nowrap flex-shrink-1 justify-content-center proxima section-header h2 fw-bold text-dark text-left mt-5">
+    <%= @region.name %>
+  </div>
+  <div class="col-2 p-1 mt-5 ml-1 justify-content-right flex-nowrap flex-shrink-1 border border-4 border-dark rounded-3 text-center bg-dark text-white h6 fs-italic">
+      <%= @region.bioscore %>
+    <br/>BioScore
+    <% if @user&.admin? %>
+      <% url = request.base_url + "/region/" + @region.slug + "/bioscore" %>
+      <a href="<%= url %>" target="_blank" title="View BioScore Calculations" class="text-decoration-none">(i)</a>
+    <% end %>
+  </div>
+</div>
+
+<%#= render partial: 'scores', locals: { object: @region } %>
+
+<!--div class="row justify-content-center">
+  <div class="col-10 my-5 h6">
+    <div class="row justify-content-center">
+      <div class="col-3">Bioscore </div>
+    </div>  
+  </div>
+</div-->
+
+<% if !@region.raw_polygon_json.blank? && @region.raw_polygon_json!='[]' || @region.child_regions.count>0 %>
+  <div class="row justify-content-center">
+    <div class="col-10">
+      <!--div class="row mt-3">
+        <div class="input-group input-group-sm me-2">
+          <span class="input-group-text">From</span>
+          <input class="form-control form-control-sm" type="datetime-local" id="start_filter" value="<%#= 1.month.ago.to_datetime.strftime '%Y-%m-%dT%H:%M:%S' %>">
+          <span class="input-group-text">To</span>
+          <input class="form-control form-control-sm" type="datetime-local" id="end_filter" value="<%#= Time.now.to_datetime.strftime '%Y-%m-%dT%H:%M:%S' %>">        
+          <select class="form-select form-select-sm" id="species_filter">
+            <option value="all" selected>All species</option>
+          </select>
+          <button class="btn btn-outline-secondary" type="button">Filter</button>
+        </div>  
+      </div-->
+
+      <% if @region.neighboring_regions.count > 0 %>
+      <% locality = @region.get_neighboring_region(region_type: 'locality') %>
+      <% greater_region = @region.get_neighboring_region(region_type: 'greater_region') %>
+
+        <div class="row border border-1 rounded-2 p-2 flex-nowrap flex-shrink-1" style="height:40px; padding:0 !important;">
+
+          <div style="display: table; background-color:black;width:100%; ">
+              <div style="display: table-cell;width:25%;"></div>
+              <div style="display: table-cell; font-weight:bold;width:5%;vertical-align:middle;"><Strike style="color:white;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</Strike></div> 
+              <div style="display: table-cell; color:white;font-weight:bold; vertical-align:middle;width:15%;">&nbsp;&nbsp;&nbsp;   Locality
+              <% if locality&.size.present? %>
+              &nbsp;(<%= locality.size %>x)
+              <% end %>
+              </div>
+              <div style="display: table-cell;width:5%;"></div>
+              <div style="display: table-cell; color:white;font-weight:bold; vertical-align:middle;width:7%;">- - - - - -</div>
+              <div style="display: table-cell; color:white;font-weight:bold;vertical-align:middle;width:30%;">&nbsp;&nbsp;&nbsp;Greater Region
+              <% if greater_region&.size.present? %>
+              &nbsp;(<%= greater_region.size %>x)
+              <% end %>
+              </div>
+              <div style="display: table-cell;width:13%;"></div>
+          </div>
+        </div>
+      <% end %>
+      <div class="row my-2">
+        <div class="col" id="region-map" style="width:100%; height:600px;"></div>  
+        <script>  
+          <% if @region.child_regions.count>0 %>
+            var _polygon_json = <%= JSON.generate(@region.get_child_region_polygons).html_safe %>;
+          <% else %>
+            var _polygon_json = <%= @region.raw_polygon_json.html_safe %>;
+          <% end %>
+          var _neighboring_regions_json = [];
+          <% if locality.present? %>
+            _neighboring_regions_json.push(<%= locality.raw_polygon_json.html_safe %>);
+          <% end %>
+          <% if greater_region.present? %>
+             _neighboring_regions_json.push(<%= greater_region.raw_polygon_json.html_safe %>);
+          <% end %>
+          var _observations_filename = "/observations/region/<%= @region.id %>";
+          <% if @region.subregions.count<1000 %>
+            var _subregions = <%= JSON.generate(@region.subregions.where.not(radius_km: nil).map { |s| { lat: s.lat, lng: s.lng, radius_metres: (s.radius_km*1000) } }).html_safe %>;
+          <% else %>
+            var _subregions = [];
+          <% end %>    
+        </script>        
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<%= render partial: 'region_details', locals: { object: @region } %>
+
+<%= render partial: 'statistics', locals: { object: @region } %>
+
+<%= render partial: 'regions_scores', locals: { object: @region } %>
+
+<% if @region.child_regions.count>0 %>
+  <div class="row justify-content-center mt-5">
+    <div class="col-10">
+      <div class="row mt-5">
+        <div class="col h4 text-center proxima section-header">Leaderboard</div> 
+      </div>  
+      <div class="row mb-5">
+        <% @region.child_regions.each do |r| %>
+          <%= render partial: 'region_top_page', locals: { r: r } %>
+          <%= render partial: 'statistics', locals: { object: r } %>
+        <% end %>
+      </div>
+    </div>
+  </div>      
+<% end %>
+
+<%= render partial: 'species_people_rankings', locals: { object: @region } %>
+
+<% if @region.contests.in_progress.count>0 %>
+  <div class="row justify-content-center mt-5">
+    <div class="col-10">
+      <div class="row">
+        <div class="col">
+          <div class="row mt-5">
+            <div class="col mb-3 h4 text-center proxima section-header">Contests In Progress</div> 
+          </div>  
+          <div class="row mt-5">
+            <div class="col">
+              <% @region.contests.in_progress.ordered_by_starts_at.first(5).each.with_index(1) do |c,i| %>
+                <%= render partial: 'contest', locals: { c: c, i: i, observations_object: @region.participations.where(contest_id: c.id).first, show_more_link: true, show_stats: true } %>
+              <% end %>
+            </div>
+          </div>
+        </div>      
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<%= render partial: 'recent_observations', locals: { observations: @observations, api_parameters: "?region_id=#{ @region.id }" } %>
+
+<% if @region.contests.upcoming.count>0 %>
+  <div class="row justify-content-center mt-5">
+    <div class="col-10">
+      <div class="row">
+        <div class="col">
+          <div class="row mt-5">
+            <div class="col mb-3 h4 text-center proxima section-header">Upcoming Contests</div> 
+          </div>  
+          <div class="row mt-5">
+            <div class="col">
+              <% @region.contests.upcoming.ordered_by_starts_at.first(5).each.with_index(1) do |c,i| %>
+                <%= render partial: 'contest', locals: { c: c, i: i, observations_object: @region.participations.where(contest_id: c.id).first, show_more_link: true, show_stats: true } %>
+              <% end %>
+            </div>    
+          </div>
+        </div>      
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<% if @region.contests.past.count>0 %>
+  <div class="row justify-content-center mt-5">
+    <div class="col-10">
+      <div class="row">
+        <div class="col">
+          <div class="row mt-5">
+            <div class="col mb-3 h4 text-center proxima section-header">Past Contests</div> 
+          </div>  
+          <div class="row mt-5">
+            <div class="col">
+              <% @region.contests.past.ordered_by_starts_at.first(5).each.with_index(1) do |c,i| %>
+                <%= render partial: 'contest', locals: { c: c, i: i, observations_object: @region.participations.where(contest_id: c.id).first, show_more_link: true, show_stats: true } %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

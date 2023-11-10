@@ -1,0 +1,10 @@
+<div class="row mt-5">
+  <div class="col d-flex justify-content-center h6">BioSCORE</div>
+  <div class="col d-flex justify-content-center h6">Estimated Mental Health Savings</div>  
+  <div class="col d-flex justify-content-center h6">Estimated Physical Health Savings</div>    
+</div>
+<div class="row mb-5">
+  <div class="col d-flex justify-content-center h6 fw-bold"><%= number_with_delimiter object.bioscore.round, delimiter: ',' %></div>
+  <div class="col d-flex justify-content-center h6 fw-bold">$ <%= number_with_delimiter object.get_mental_health_score, delimiter: ',' %></div>  
+  <div class="col d-flex justify-content-center h6 fw-bold">$ <%= number_with_delimiter object.get_physical_health_score, delimiter: ',' %></div>    
+</div>

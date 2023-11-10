@@ -1,0 +1,72 @@
+<% modalid = contest.nil? ? 'new' : contest.id %>
+
+<div class="modal fade contest-modal contest-modal-<%= modalid %>" tabindex="-1" id="<%= id %>" data-id="<%= contest.nil? ? '' : contest.id %>">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title fw-heavy"><%= title %></h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+        <div class="row justify-content-center mb-5">
+          <div class="col-6 col-lg-4">
+            <div class="input-group">
+              <select class="form-select status_contest">
+                <option value="online" <%= contest && contest.online? ? 'selected' : '' %>>online</option>
+                <option value="offline" <%= contest && contest.offline? ? 'selected' : '' %>>offline</option>
+                <option value="deleted" <%= contest && contest.deleted? ? 'selected' : '' %>>deleted</option>
+                <option value="completed" <%= contest && contest.completed? ? 'selected' : '' %>>completed</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-12 col-lg-6 mb-3">
+            <div class="input-group">
+              <input type="text" class="form-control title_contest" placeholder="Contest Title" required="required" value="<%= contest.nil? ? '' : contest.title %>">
+            </div>
+          </div>
+          <div class="col-12 col-lg-6 mb-3">
+            <div class="input-group">
+              <input type="text" class="form-control description_contest" placeholder="Description" required="required" value="<%= contest.nil? ? '' : contest.description %>">
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-12 col-lg-6 mb-3">
+            <div class="input-group">
+              <input type="datetime-local" class="form-control starts_at_contest" placeholder="Start Date" required="required" value="<%= contest.nil? ? '' : contest.starts_at.strftime('%Y-%m-%dT%H:%M') %>">
+            </div>
+          </div>
+          <div class="col-12 col-lg-6 mb-3">
+            <div class="input-group">
+              <input type="datetime-local" class="form-control ends_at_contest" placeholder="End Date" required="required" value="<%= contest.nil? ? '' : contest.ends_at.strftime('%Y-%m-%dT%H:%M') %>">
+            </div>
+          </div>
+        </div>
+
+        <div class="row justify-content-center my-5">
+          <div class="col-8">
+            <div class="form-group">
+              <button class="btn btn-outline-secondary w-100 contest_save_action" data-id="<%= contest.nil? ? 'new' : contest.id %>">Save</button>
+            </div>
+          </div>
+        </div>
+        <div class="row justify-content-center mb-3">
+          <div class="col-8 validation-messages">
+            <span class="text-danger validation-ok organization_name">Title is required.</span>
+            <span class="text-danger validation-ok email">Start date and time is required.</span>
+            <span class="text-danger validation-ok email">End date and time is required.</span>
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

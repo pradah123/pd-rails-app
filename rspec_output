@@ -1,0 +1,1245 @@
+*FFFFF
+
+Pending: (Failures listed here are expected and do not affect your suite's status)
+
+  1) Param add some examples to (or delete) /home/vagrant/mainline/biosmart/spec/models/param_spec.rb
+     # Not yet implemented
+     # ./spec/models/param_spec.rb:4
+
+Failures:
+
+  1) api/v1/region /api/v1/region post successful returns a 200 response
+     Got 0 failures and 2 other errors:
+
+     1.1) Failure/Error: raise(MissingParameterError, body_param[:name]) unless example.respond_to?(body_param[:name])
+
+          Rswag::Specs::MissingParameterError:
+            Missing parameter 'region'
+
+            Please check your spec. It looks like you defined a body parameter,
+            but did not declare usage via let. Try adding:
+
+                let(:region) {}
+          # /home/vagrant/.rvm/gems/ruby-3.0.2/gems/rswag-specs-2.5.1/lib/rswag/specs/request_factory.rb:200:in `build_json_payload'
+          # /home/vagrant/.rvm/gems/ruby-3.0.2/gems/rswag-specs-2.5.1/lib/rswag/specs/request_factory.rb:180:in `add_payload'
+          # /home/vagrant/.rvm/gems/ruby-3.0.2/gems/rswag-specs-2.5.1/lib/rswag/specs/request_factory.rb:22:in `block in build_request'
+          # <internal:kernel>:90:in `tap'
+          # /home/vagrant/.rvm/gems/ruby-3.0.2/gems/rswag-specs-2.5.1/lib/rswag/specs/request_factory.rb:18:in `build_request'
+          # /home/vagrant/.rvm/gems/ruby-3.0.2/gems/rswag-specs-2.5.1/lib/rswag/specs/example_helpers.rb:10:in `submit_request'
+          # /home/vagrant/.rvm/gems/ruby-3.0.2/gems/rswag-specs-2.5.1/lib/rswag/specs/example_group_helpers.rb:94:in `block in run_test!'
+
+     1.2) Failure/Error: example: JSON.parse(response.body, symbolize_names: true)
+
+          NoMethodError:
+            undefined method `body' for nil:NilClass
+          # ./spec/requests/api/v1/region_spec.rb:27:in `block (5 levels) in <main>'
+
+  2) api/v1/region /api/v1/region/{id} get successful returns a 200 response
+     Got 0 failures and 2 other errors:
+
+     2.1) Failure/Error:
+            raise UnexpectedResponse,
+              "Expected response code '#{response.code}' to match '#{expected}'\n" \
+                "Response body: #{response.body}"
+
+          Rswag::Specs::UnexpectedResponse:
+            Expected response code '403' to match '200'
+            Response body: <!DOCTYPE html>
+            <html lang="en">
+            <head>
+              <meta charset="utf-8" />
+              <meta name="viewport" content="width=device-width, initial-scale=1">
+              <title>Action Controller: Exception caught</title>
+              <style>
+                body {
+                  background-color: #FAFAFA;
+                  color: #333;
+                  color-scheme: light dark;
+                  supported-color-schemes: light dark;
+                  margin: 0px;
+                }
+
+                body, p, ol, ul, td {
+                  font-family: helvetica, verdana, arial, sans-serif;
+                  font-size:   13px;
+                  line-height: 18px;
+                }
+
+                pre {
+                  font-size: 11px;
+                  white-space: pre-wrap;
+                }
+
+                pre.box {
+                  border: 1px solid #EEE;
+                  padding: 10px;
+                  margin: 0px;
+                  width: 958px;
+                }
+
+                header {
+                  color: #F0F0F0;
+                  background: #C00;
+                  padding: 0.5em 1.5em;
+                }
+
+                h1 {
+                  overflow-wrap: break-word;
+                  margin: 0.2em 0;
+                  line-height: 1.1em;
+                  font-size: 2em;
+                }
+
+                h2 {
+                  color: #C00;
+                  line-height: 25px;
+                }
+
+                code.traces {
+                  font-size: 11px;
+                }
+
+                .response-heading, .request-heading {
+                  margin-top: 30px;
+                }
+
+                .exception-message {
+                  padding: 8px 0;
+                }
+
+                .exception-message .message {
+                  margin-bottom: 8px;
+                  line-height: 25px;
+                  font-size: 1.5em;
+                  font-weight: bold;
+                  color: #C00;
+                }
+
+                .details {
+                  border: 1px solid #D0D0D0;
+                  border-radius: 4px;
+                  margin: 1em 0px;
+                  display: block;
+                  max-width: 978px;
+                }
+
+                .summary {
+                  padding: 8px 15px;
+                  border-bottom: 1px solid #D0D0D0;
+                  display: block;
+                }
+
+                a.summary {
+                  color: #F0F0F0;
+                  text-decoration: none;
+                  background: #C52F24;
+                  border-bottom: none;
+                }
+
+                .details pre {
+                  margin: 5px;
+                  border: none;
+                }
+
+                #container {
+                  box-sizing: border-box;
+                  width: 100%;
+                  padding: 0 1.5em;
+                }
+
+                .source * {
+                  margin: 0px;
+                  padding: 0px;
+                }
+
+                .source {
+                  border: 1px solid #D9D9D9;
+                  background: #ECECEC;
+                  max-width: 978px;
+                }
+
+                .source pre {
+                  padding: 10px 0px;
+                  border: none;
+                }
+
+                .source .data {
+                  font-size: 80%;
+                  overflow: auto;
+                  background-color: #FFF;
+                }
+
+                .info {
+                  padding: 0.5em;
+                }
+
+                .source .data .line_numbers {
+                  background-color: #ECECEC;
+                  color: #555;
+                  padding: 1em .5em;
+                  border-right: 1px solid #DDD;
+                  text-align: right;
+                }
+
+                .line {
+                  padding-left: 10px;
+                  white-space: pre;
+                }
+
+                .line:hover {
+                  background-color: #F6F6F6;
+                }
+
+                .line.active {
+                  background-color: #FCC;
+                }
+
+                .button_to {
+                  display: inline-block;
+                  margin-top: 0.75em;
+                  margin-bottom: 0.75em;
+                }
+
+                .hidden {
+                  display: none;
+                }
+
+                .correction {
+                  list-style-type: none;
+                }
+
+                input[type="submit"] {
+                  color: white;
+                  background-color: #C00;
+                  border: none;
+                  border-radius: 12px;
+                  box-shadow: 0 3px #F99;
+                  font-size: 13px;
+                  font-weight: bold;
+                  margin: 0;
+                  padding: 10px 18px;
+                  cursor: pointer;
+                  -webkit-appearance: none;
+                }
+                input[type="submit"]:focus,
+                input[type="submit"]:hover {
+                  opacity: 0.8;
+                }
+                input[type="submit"]:active {
+                  box-shadow: 0 2px #F99;
+                  transform: translateY(1px)
+                }
+
+                a { color: #980905; }
+                a:visited { color: #666; }
+                a.trace-frames {
+                  color: #666;
+                  overflow-wrap: break-word;
+                }
+                a:hover, a.trace-frames.selected { color: #C00; }
+                a.summary:hover { color: #FFF; }
+
+                @media (prefers-color-scheme: dark) {
+                  body {
+                    background-color: #222;
+                    color: #ECECEC;
+                  }
+
+                  .details, .summary {
+                    border-color: #666;
+                  }
+
+                  .source {
+                    border-color: #555;
+                    background-color: #333;
+                  }
+
+                  .source .data {
+                    background: #444;
+                  }
+
+                  .source .data .line_numbers {
+                    background: #333;
+                    border-color: #222;
+                  }
+
+                  .line:hover {
+                    background: #666;
+                  }
+
+                  .line.active {
+                    background-color: #900;
+                  }
+
+                  input[type="submit"] {
+                    box-shadow: 0 3px #800;
+                  }
+                  input[type="submit"]:active {
+                    box-shadow: 0 2px #800;
+                  }
+
+                  a { color: #C00; }
+                  a.trace-frames { color: #999; }
+                  a:hover, a.trace-frames.selected { color: #E9382B; }
+                }
+
+                
+              </style>
+
+              <script>
+                var toggle = function(id) {
+                  document.getElementById(id).classList.toggle('hidden');
+                  return false;
+                }
+                var show = function(id) {
+                  document.getElementById(id).style.display = 'block';
+                }
+                var hide = function(id) {
+                  document.getElementById(id).style.display = 'none';
+                }
+                var toggleSessionDump = function() {
+                  return toggle('session_dump');
+                }
+                var toggleEnvDump = function() {
+                  return toggle('env_dump');
+                }
+              </script>
+            </head>
+            <body>
+
+              <header>
+              <h1>Blocked host: www.example.com</h1>
+            </header>
+            <main role="main" id="container">
+              <h2>To allow requests to www.example.com make sure it is a valid hostname (containing only numbers, letters, dashes and dots), then add the following to your environment configuration:</h2>
+              <pre>config.hosts &lt;&lt; "www.example.com"</pre>
+              <p>For more details view: <a href="https://guides.rubyonrails.org/configuring.html#actiondispatch-hostauthorization">the Host Authorization guide</a></p>
+            </main>
+
+
+            </body>
+            </html>
+          # /home/vagrant/.rvm/gems/ruby-3.0.2/gems/rswag-specs-2.5.1/lib/rswag/specs/response_validator.rb:28:in `validate_code!'
+          # /home/vagrant/.rvm/gems/ruby-3.0.2/gems/rswag-specs-2.5.1/lib/rswag/specs/response_validator.rb:18:in `validate!'
+          # /home/vagrant/.rvm/gems/ruby-3.0.2/gems/rswag-specs-2.5.1/lib/rswag/specs/example_helpers.rb:30:in `assert_response_matches_metadata'
+          # /home/vagrant/.rvm/gems/ruby-3.0.2/gems/rswag-specs-2.5.1/lib/rswag/specs/example_group_helpers.rb:98:in `block in run_test!'
+
+     2.2) Failure/Error: example: JSON.parse(response.body, symbolize_names: true)
+
+          JSON::ParserError:
+            859: unexpected token at '<!DOCTYPE html>
+            <html lang="en">
+            <head>
+              <meta charset="utf-8" />
+              <meta name="viewport" content="width=device-width, initial-scale=1">
+              <title>Action Controller: Exception caught</title>
+              <style>
+                body {
+                  background-color: #FAFAFA;
+                  color: #333;
+                  color-scheme: light dark;
+                  supported-color-schemes: light dark;
+                  margin: 0px;
+                }
+
+                body, p, ol, ul, td {
+                  font-family: helvetica, verdana, arial, sans-serif;
+                  font-size:   13px;
+                  line-height: 18px;
+                }
+
+                pre {
+                  font-size: 11px;
+                  white-space: pre-wrap;
+                }
+
+                pre.box {
+                  border: 1px solid #EEE;
+                  padding: 10px;
+                  margin: 0px;
+                  width: 958px;
+                }
+
+                header {
+                  color: #F0F0F0;
+                  background: #C00;
+                  padding: 0.5em 1.5em;
+                }
+
+                h1 {
+                  overflow-wrap: break-word;
+                  margin: 0.2em 0;
+                  line-height: 1.1em;
+                  font-size: 2em;
+                }
+
+                h2 {
+                  color: #C00;
+                  line-height: 25px;
+                }
+
+                code.traces {
+                  font-size: 11px;
+                }
+
+                .response-heading, .request-heading {
+                  margin-top: 30px;
+                }
+
+                .exception-message {
+                  padding: 8px 0;
+                }
+
+                .exception-message .message {
+                  margin-bottom: 8px;
+                  line-height: 25px;
+                  font-size: 1.5em;
+                  font-weight: bold;
+                  color: #C00;
+                }
+
+                .details {
+                  border: 1px solid #D0D0D0;
+                  border-radius: 4px;
+                  margin: 1em 0px;
+                  display: block;
+                  max-width: 978px;
+                }
+
+                .summary {
+                  padding: 8px 15px;
+                  border-bottom: 1px solid #D0D0D0;
+                  display: block;
+                }
+
+                a.summary {
+                  color: #F0F0F0;
+                  text-decoration: none;
+                  background: #C52F24;
+                  border-bottom: none;
+                }
+
+                .details pre {
+                  margin: 5px;
+                  border: none;
+                }
+
+                #container {
+                  box-sizing: border-box;
+                  width: 100%;
+                  padding: 0 1.5em;
+                }
+
+                .source * {
+                  margin: 0px;
+                  padding: 0px;
+                }
+
+                .source {
+                  border: 1px solid #D9D9D9;
+                  background: #ECECEC;
+                  max-width: 978px;
+                }
+
+                .source pre {
+                  padding: 10px 0px;
+                  border: none;
+                }
+
+                .source .data {
+                  font-size: 80%;
+                  overflow: auto;
+                  background-color: #FFF;
+                }
+
+                .info {
+                  padding: 0.5em;
+                }
+
+                .source .data .line_numbers {
+                  background-color: #ECECEC;
+                  color: #555;
+                  padding: 1em .5em;
+                  border-right: 1px solid #DDD;
+                  text-align: right;
+                }
+
+                .line {
+                  padding-left: 10px;
+                  white-space: pre;
+                }
+
+                .line:hover {
+                  background-color: #F6F6F6;
+                }
+
+                .line.active {
+                  background-color: #FCC;
+                }
+
+                .button_to {
+                  display: inline-block;
+                  margin-top: 0.75em;
+                  margin-bottom: 0.75em;
+                }
+
+                .hidden {
+                  display: none;
+                }
+
+                .correction {
+                  list-style-type: none;
+                }
+
+                input[type="submit"] {
+                  color: white;
+                  background-color: #C00;
+                  border: none;
+                  border-radius: 12px;
+                  box-shadow: 0 3px #F99;
+                  font-size: 13px;
+                  font-weight: bold;
+                  margin: 0;
+                  padding: 10px 18px;
+                  cursor: pointer;
+                  -webkit-appearance: none;
+                }
+                input[type="submit"]:focus,
+                input[type="submit"]:hover {
+                  opacity: 0.8;
+                }
+                input[type="submit"]:active {
+                  box-shadow: 0 2px #F99;
+                  transform: translateY(1px)
+                }
+
+                a { color: #980905; }
+                a:visited { color: #666; }
+                a.trace-frames {
+                  color: #666;
+                  overflow-wrap: break-word;
+                }
+                a:hover, a.trace-frames.selected { color: #C00; }
+                a.summary:hover { color: #FFF; }
+
+                @media (prefers-color-scheme: dark) {
+                  body {
+                    background-color: #222;
+                    color: #ECECEC;
+                  }
+
+                  .details, .summary {
+                    border-color: #666;
+                  }
+
+                  .source {
+                    border-color: #555;
+                    background-color: #333;
+                  }
+
+                  .source .data {
+                    background: #444;
+                  }
+
+                  .source .data .line_numbers {
+                    background: #333;
+                    border-color: #222;
+                  }
+
+                  .line:hover {
+                    background: #666;
+                  }
+
+                  .line.active {
+                    background-color: #900;
+                  }
+
+                  input[type="submit"] {
+                    box-shadow: 0 3px #800;
+                  }
+                  input[type="submit"]:active {
+                    box-shadow: 0 2px #800;
+                  }
+
+                  a { color: #C00; }
+                  a.trace-frames { color: #999; }
+                  a:hover, a.trace-frames.selected { color: #E9382B; }
+                }
+
+                
+              </style>
+
+              <script>
+                var toggle = function(id) {
+                  document.getElementById(id).classList.toggle('hidden');
+                  return false;
+                }
+                var show = function(id) {
+                  document.getElementById(id).style.display = 'block';
+                }
+                var hide = function(id) {
+                  document.getElementById(id).style.display = 'none';
+                }
+                var toggleSessionDump = function() {
+                  return toggle('session_dump');
+                }
+                var toggleEnvDump = function() {
+                  return toggle('env_dump');
+                }
+              </script>
+            </head>
+            <body>
+
+              <header>
+              <h1>Blocked host: www.example.com</h1>
+            </header>
+            <main role="main" id="container">
+              <h2>To allow requests to www.example.com make sure it is a valid hostname (containing only numbers, letters, dashes and dots), then add the following to your environment configuration:</h2>
+              <pre>config.hosts &lt;&lt; "www.example.com"</pre>
+              <p>For more details view: <a href="https://guides.rubyonrails.org/configuring.html#actiondispatch-hostauthorization">the Host Authorization guide</a></p>
+            </main>
+
+
+            </body>
+            </html>
+            '
+          # /home/vagrant/.rvm/gems/ruby-3.0.2/gems/json-2.6.0/lib/json/common.rb:216:in `parse'
+          # /home/vagrant/.rvm/gems/ruby-3.0.2/gems/json-2.6.0/lib/json/common.rb:216:in `parse'
+          # ./spec/requests/api/v1/region_spec.rb:46:in `block (5 levels) in <main>'
+
+  3) api/v1/region /api/v1/region/{id} delete successful returns a 200 response
+     Got 0 failures and 2 other errors:
+
+     3.1) Failure/Error:
+            raise UnexpectedResponse,
+              "Expected response code '#{response.code}' to match '#{expected}'\n" \
+                "Response body: #{response.body}"
+
+          Rswag::Specs::UnexpectedResponse:
+            Expected response code '403' to match '200'
+            Response body: <!DOCTYPE html>
+            <html lang="en">
+            <head>
+              <meta charset="utf-8" />
+              <meta name="viewport" content="width=device-width, initial-scale=1">
+              <title>Action Controller: Exception caught</title>
+              <style>
+                body {
+                  background-color: #FAFAFA;
+                  color: #333;
+                  color-scheme: light dark;
+                  supported-color-schemes: light dark;
+                  margin: 0px;
+                }
+
+                body, p, ol, ul, td {
+                  font-family: helvetica, verdana, arial, sans-serif;
+                  font-size:   13px;
+                  line-height: 18px;
+                }
+
+                pre {
+                  font-size: 11px;
+                  white-space: pre-wrap;
+                }
+
+                pre.box {
+                  border: 1px solid #EEE;
+                  padding: 10px;
+                  margin: 0px;
+                  width: 958px;
+                }
+
+                header {
+                  color: #F0F0F0;
+                  background: #C00;
+                  padding: 0.5em 1.5em;
+                }
+
+                h1 {
+                  overflow-wrap: break-word;
+                  margin: 0.2em 0;
+                  line-height: 1.1em;
+                  font-size: 2em;
+                }
+
+                h2 {
+                  color: #C00;
+                  line-height: 25px;
+                }
+
+                code.traces {
+                  font-size: 11px;
+                }
+
+                .response-heading, .request-heading {
+                  margin-top: 30px;
+                }
+
+                .exception-message {
+                  padding: 8px 0;
+                }
+
+                .exception-message .message {
+                  margin-bottom: 8px;
+                  line-height: 25px;
+                  font-size: 1.5em;
+                  font-weight: bold;
+                  color: #C00;
+                }
+
+                .details {
+                  border: 1px solid #D0D0D0;
+                  border-radius: 4px;
+                  margin: 1em 0px;
+                  display: block;
+                  max-width: 978px;
+                }
+
+                .summary {
+                  padding: 8px 15px;
+                  border-bottom: 1px solid #D0D0D0;
+                  display: block;
+                }
+
+                a.summary {
+                  color: #F0F0F0;
+                  text-decoration: none;
+                  background: #C52F24;
+                  border-bottom: none;
+                }
+
+                .details pre {
+                  margin: 5px;
+                  border: none;
+                }
+
+                #container {
+                  box-sizing: border-box;
+                  width: 100%;
+                  padding: 0 1.5em;
+                }
+
+                .source * {
+                  margin: 0px;
+                  padding: 0px;
+                }
+
+                .source {
+                  border: 1px solid #D9D9D9;
+                  background: #ECECEC;
+                  max-width: 978px;
+                }
+
+                .source pre {
+                  padding: 10px 0px;
+                  border: none;
+                }
+
+                .source .data {
+                  font-size: 80%;
+                  overflow: auto;
+                  background-color: #FFF;
+                }
+
+                .info {
+                  padding: 0.5em;
+                }
+
+                .source .data .line_numbers {
+                  background-color: #ECECEC;
+                  color: #555;
+                  padding: 1em .5em;
+                  border-right: 1px solid #DDD;
+                  text-align: right;
+                }
+
+                .line {
+                  padding-left: 10px;
+                  white-space: pre;
+                }
+
+                .line:hover {
+                  background-color: #F6F6F6;
+                }
+
+                .line.active {
+                  background-color: #FCC;
+                }
+
+                .button_to {
+                  display: inline-block;
+                  margin-top: 0.75em;
+                  margin-bottom: 0.75em;
+                }
+
+                .hidden {
+                  display: none;
+                }
+
+                .correction {
+                  list-style-type: none;
+                }
+
+                input[type="submit"] {
+                  color: white;
+                  background-color: #C00;
+                  border: none;
+                  border-radius: 12px;
+                  box-shadow: 0 3px #F99;
+                  font-size: 13px;
+                  font-weight: bold;
+                  margin: 0;
+                  padding: 10px 18px;
+                  cursor: pointer;
+                  -webkit-appearance: none;
+                }
+                input[type="submit"]:focus,
+                input[type="submit"]:hover {
+                  opacity: 0.8;
+                }
+                input[type="submit"]:active {
+                  box-shadow: 0 2px #F99;
+                  transform: translateY(1px)
+                }
+
+                a { color: #980905; }
+                a:visited { color: #666; }
+                a.trace-frames {
+                  color: #666;
+                  overflow-wrap: break-word;
+                }
+                a:hover, a.trace-frames.selected { color: #C00; }
+                a.summary:hover { color: #FFF; }
+
+                @media (prefers-color-scheme: dark) {
+                  body {
+                    background-color: #222;
+                    color: #ECECEC;
+                  }
+
+                  .details, .summary {
+                    border-color: #666;
+                  }
+
+                  .source {
+                    border-color: #555;
+                    background-color: #333;
+                  }
+
+                  .source .data {
+                    background: #444;
+                  }
+
+                  .source .data .line_numbers {
+                    background: #333;
+                    border-color: #222;
+                  }
+
+                  .line:hover {
+                    background: #666;
+                  }
+
+                  .line.active {
+                    background-color: #900;
+                  }
+
+                  input[type="submit"] {
+                    box-shadow: 0 3px #800;
+                  }
+                  input[type="submit"]:active {
+                    box-shadow: 0 2px #800;
+                  }
+
+                  a { color: #C00; }
+                  a.trace-frames { color: #999; }
+                  a:hover, a.trace-frames.selected { color: #E9382B; }
+                }
+
+                
+              </style>
+
+              <script>
+                var toggle = function(id) {
+                  document.getElementById(id).classList.toggle('hidden');
+                  return false;
+                }
+                var show = function(id) {
+                  document.getElementById(id).style.display = 'block';
+                }
+                var hide = function(id) {
+                  document.getElementById(id).style.display = 'none';
+                }
+                var toggleSessionDump = function() {
+                  return toggle('session_dump');
+                }
+                var toggleEnvDump = function() {
+                  return toggle('env_dump');
+                }
+              </script>
+            </head>
+            <body>
+
+              <header>
+              <h1>Blocked host: www.example.com</h1>
+            </header>
+            <main role="main" id="container">
+              <h2>To allow requests to www.example.com make sure it is a valid hostname (containing only numbers, letters, dashes and dots), then add the following to your environment configuration:</h2>
+              <pre>config.hosts &lt;&lt; "www.example.com"</pre>
+              <p>For more details view: <a href="https://guides.rubyonrails.org/configuring.html#actiondispatch-hostauthorization">the Host Authorization guide</a></p>
+            </main>
+
+
+            </body>
+            </html>
+          # /home/vagrant/.rvm/gems/ruby-3.0.2/gems/rswag-specs-2.5.1/lib/rswag/specs/response_validator.rb:28:in `validate_code!'
+          # /home/vagrant/.rvm/gems/ruby-3.0.2/gems/rswag-specs-2.5.1/lib/rswag/specs/response_validator.rb:18:in `validate!'
+          # /home/vagrant/.rvm/gems/ruby-3.0.2/gems/rswag-specs-2.5.1/lib/rswag/specs/example_helpers.rb:30:in `assert_response_matches_metadata'
+          # /home/vagrant/.rvm/gems/ruby-3.0.2/gems/rswag-specs-2.5.1/lib/rswag/specs/example_group_helpers.rb:98:in `block in run_test!'
+
+     3.2) Failure/Error: example: JSON.parse(response.body, symbolize_names: true)
+
+          JSON::ParserError:
+            859: unexpected token at '<!DOCTYPE html>
+            <html lang="en">
+            <head>
+              <meta charset="utf-8" />
+              <meta name="viewport" content="width=device-width, initial-scale=1">
+              <title>Action Controller: Exception caught</title>
+              <style>
+                body {
+                  background-color: #FAFAFA;
+                  color: #333;
+                  color-scheme: light dark;
+                  supported-color-schemes: light dark;
+                  margin: 0px;
+                }
+
+                body, p, ol, ul, td {
+                  font-family: helvetica, verdana, arial, sans-serif;
+                  font-size:   13px;
+                  line-height: 18px;
+                }
+
+                pre {
+                  font-size: 11px;
+                  white-space: pre-wrap;
+                }
+
+                pre.box {
+                  border: 1px solid #EEE;
+                  padding: 10px;
+                  margin: 0px;
+                  width: 958px;
+                }
+
+                header {
+                  color: #F0F0F0;
+                  background: #C00;
+                  padding: 0.5em 1.5em;
+                }
+
+                h1 {
+                  overflow-wrap: break-word;
+                  margin: 0.2em 0;
+                  line-height: 1.1em;
+                  font-size: 2em;
+                }
+
+                h2 {
+                  color: #C00;
+                  line-height: 25px;
+                }
+
+                code.traces {
+                  font-size: 11px;
+                }
+
+                .response-heading, .request-heading {
+                  margin-top: 30px;
+                }
+
+                .exception-message {
+                  padding: 8px 0;
+                }
+
+                .exception-message .message {
+                  margin-bottom: 8px;
+                  line-height: 25px;
+                  font-size: 1.5em;
+                  font-weight: bold;
+                  color: #C00;
+                }
+
+                .details {
+                  border: 1px solid #D0D0D0;
+                  border-radius: 4px;
+                  margin: 1em 0px;
+                  display: block;
+                  max-width: 978px;
+                }
+
+                .summary {
+                  padding: 8px 15px;
+                  border-bottom: 1px solid #D0D0D0;
+                  display: block;
+                }
+
+                a.summary {
+                  color: #F0F0F0;
+                  text-decoration: none;
+                  background: #C52F24;
+                  border-bottom: none;
+                }
+
+                .details pre {
+                  margin: 5px;
+                  border: none;
+                }
+
+                #container {
+                  box-sizing: border-box;
+                  width: 100%;
+                  padding: 0 1.5em;
+                }
+
+                .source * {
+                  margin: 0px;
+                  padding: 0px;
+                }
+
+                .source {
+                  border: 1px solid #D9D9D9;
+                  background: #ECECEC;
+                  max-width: 978px;
+                }
+
+                .source pre {
+                  padding: 10px 0px;
+                  border: none;
+                }
+
+                .source .data {
+                  font-size: 80%;
+                  overflow: auto;
+                  background-color: #FFF;
+                }
+
+                .info {
+                  padding: 0.5em;
+                }
+
+                .source .data .line_numbers {
+                  background-color: #ECECEC;
+                  color: #555;
+                  padding: 1em .5em;
+                  border-right: 1px solid #DDD;
+                  text-align: right;
+                }
+
+                .line {
+                  padding-left: 10px;
+                  white-space: pre;
+                }
+
+                .line:hover {
+                  background-color: #F6F6F6;
+                }
+
+                .line.active {
+                  background-color: #FCC;
+                }
+
+                .button_to {
+                  display: inline-block;
+                  margin-top: 0.75em;
+                  margin-bottom: 0.75em;
+                }
+
+                .hidden {
+                  display: none;
+                }
+
+                .correction {
+                  list-style-type: none;
+                }
+
+                input[type="submit"] {
+                  color: white;
+                  background-color: #C00;
+                  border: none;
+                  border-radius: 12px;
+                  box-shadow: 0 3px #F99;
+                  font-size: 13px;
+                  font-weight: bold;
+                  margin: 0;
+                  padding: 10px 18px;
+                  cursor: pointer;
+                  -webkit-appearance: none;
+                }
+                input[type="submit"]:focus,
+                input[type="submit"]:hover {
+                  opacity: 0.8;
+                }
+                input[type="submit"]:active {
+                  box-shadow: 0 2px #F99;
+                  transform: translateY(1px)
+                }
+
+                a { color: #980905; }
+                a:visited { color: #666; }
+                a.trace-frames {
+                  color: #666;
+                  overflow-wrap: break-word;
+                }
+                a:hover, a.trace-frames.selected { color: #C00; }
+                a.summary:hover { color: #FFF; }
+
+                @media (prefers-color-scheme: dark) {
+                  body {
+                    background-color: #222;
+                    color: #ECECEC;
+                  }
+
+                  .details, .summary {
+                    border-color: #666;
+                  }
+
+                  .source {
+                    border-color: #555;
+                    background-color: #333;
+                  }
+
+                  .source .data {
+                    background: #444;
+                  }
+
+                  .source .data .line_numbers {
+                    background: #333;
+                    border-color: #222;
+                  }
+
+                  .line:hover {
+                    background: #666;
+                  }
+
+                  .line.active {
+                    background-color: #900;
+                  }
+
+                  input[type="submit"] {
+                    box-shadow: 0 3px #800;
+                  }
+                  input[type="submit"]:active {
+                    box-shadow: 0 2px #800;
+                  }
+
+                  a { color: #C00; }
+                  a.trace-frames { color: #999; }
+                  a:hover, a.trace-frames.selected { color: #E9382B; }
+                }
+
+                
+              </style>
+
+              <script>
+                var toggle = function(id) {
+                  document.getElementById(id).classList.toggle('hidden');
+                  return false;
+                }
+                var show = function(id) {
+                  document.getElementById(id).style.display = 'block';
+                }
+                var hide = function(id) {
+                  document.getElementById(id).style.display = 'none';
+                }
+                var toggleSessionDump = function() {
+                  return toggle('session_dump');
+                }
+                var toggleEnvDump = function() {
+                  return toggle('env_dump');
+                }
+              </script>
+            </head>
+            <body>
+
+              <header>
+              <h1>Blocked host: www.example.com</h1>
+            </header>
+            <main role="main" id="container">
+              <h2>To allow requests to www.example.com make sure it is a valid hostname (containing only numbers, letters, dashes and dots), then add the following to your environment configuration:</h2>
+              <pre>config.hosts &lt;&lt; "www.example.com"</pre>
+              <p>For more details view: <a href="https://guides.rubyonrails.org/configuring.html#actiondispatch-hostauthorization">the Host Authorization guide</a></p>
+            </main>
+
+
+            </body>
+            </html>
+            '
+          # /home/vagrant/.rvm/gems/ruby-3.0.2/gems/json-2.6.0/lib/json/common.rb:216:in `parse'
+          # /home/vagrant/.rvm/gems/ruby-3.0.2/gems/json-2.6.0/lib/json/common.rb:216:in `parse'
+          # ./spec/requests/api/v1/region_spec.rb:60:in `block (5 levels) in <main>'
+
+  4) api/v1/region /api/v1/region/{id} put successful returns a 200 response
+     Got 0 failures and 2 other errors:
+
+     4.1) Failure/Error: raise(MissingParameterError, body_param[:name]) unless example.respond_to?(body_param[:name])
+
+          Rswag::Specs::MissingParameterError:
+            Missing parameter 'region'
+
+            Please check your spec. It looks like you defined a body parameter,
+            but did not declare usage via let. Try adding:
+
+                let(:region) {}
+          # /home/vagrant/.rvm/gems/ruby-3.0.2/gems/rswag-specs-2.5.1/lib/rswag/specs/request_factory.rb:200:in `build_json_payload'
+          # /home/vagrant/.rvm/gems/ruby-3.0.2/gems/rswag-specs-2.5.1/lib/rswag/specs/request_factory.rb:180:in `add_payload'
+          # /home/vagrant/.rvm/gems/ruby-3.0.2/gems/rswag-specs-2.5.1/lib/rswag/specs/request_factory.rb:22:in `block in build_request'
+          # <internal:kernel>:90:in `tap'
+          # /home/vagrant/.rvm/gems/ruby-3.0.2/gems/rswag-specs-2.5.1/lib/rswag/specs/request_factory.rb:18:in `build_request'
+          # /home/vagrant/.rvm/gems/ruby-3.0.2/gems/rswag-specs-2.5.1/lib/rswag/specs/example_helpers.rb:10:in `submit_request'
+          # /home/vagrant/.rvm/gems/ruby-3.0.2/gems/rswag-specs-2.5.1/lib/rswag/specs/example_group_helpers.rb:94:in `block in run_test!'
+
+     4.2) Failure/Error: example: JSON.parse(response.body, symbolize_names: true)
+
+          NoMethodError:
+            undefined method `body' for nil:NilClass
+          # ./spec/requests/api/v1/region_spec.rb:92:in `block (5 levels) in <main>'
+
+  5) api/v1/region /api/v1/region/{id} patch successful returns a 200 response
+     Got 0 failures and 2 other errors:
+
+     5.1) Failure/Error: raise(MissingParameterError, body_param[:name]) unless example.respond_to?(body_param[:name])
+
+          Rswag::Specs::MissingParameterError:
+            Missing parameter 'region'
+
+            Please check your spec. It looks like you defined a body parameter,
+            but did not declare usage via let. Try adding:
+
+                let(:region) {}
+          # /home/vagrant/.rvm/gems/ruby-3.0.2/gems/rswag-specs-2.5.1/lib/rswag/specs/request_factory.rb:200:in `build_json_payload'
+          # /home/vagrant/.rvm/gems/ruby-3.0.2/gems/rswag-specs-2.5.1/lib/rswag/specs/request_factory.rb:180:in `add_payload'
+          # /home/vagrant/.rvm/gems/ruby-3.0.2/gems/rswag-specs-2.5.1/lib/rswag/specs/request_factory.rb:22:in `block in build_request'
+          # <internal:kernel>:90:in `tap'
+          # /home/vagrant/.rvm/gems/ruby-3.0.2/gems/rswag-specs-2.5.1/lib/rswag/specs/request_factory.rb:18:in `build_request'
+          # /home/vagrant/.rvm/gems/ruby-3.0.2/gems/rswag-specs-2.5.1/lib/rswag/specs/example_helpers.rb:10:in `submit_request'
+          # /home/vagrant/.rvm/gems/ruby-3.0.2/gems/rswag-specs-2.5.1/lib/rswag/specs/example_group_helpers.rb:94:in `block in run_test!'
+
+     5.2) Failure/Error: example: JSON.parse(response.body, symbolize_names: true)
+
+          NoMethodError:
+            undefined method `body' for nil:NilClass
+          # ./spec/requests/api/v1/region_spec.rb:121:in `block (5 levels) in <main>'
+
+Finished in 0.32014 seconds (files took 16.07 seconds to load)
+6 examples, 5 failures, 1 pending
+
+Failed examples:
+
+rspec ./spec/requests/api/v1/region_spec.rb:23 # api/v1/region /api/v1/region post successful returns a 200 response
+rspec ./spec/requests/api/v1/region_spec.rb:40 # api/v1/region /api/v1/region/{id} get successful returns a 200 response
+rspec ./spec/requests/api/v1/region_spec.rb:55 # api/v1/region /api/v1/region/{id} delete successful returns a 200 response
+rspec ./spec/requests/api/v1/region_spec.rb:87 # api/v1/region /api/v1/region/{id} put successful returns a 200 response
+rspec ./spec/requests/api/v1/region_spec.rb:116 # api/v1/region /api/v1/region/{id} patch successful returns a 200 response
+
