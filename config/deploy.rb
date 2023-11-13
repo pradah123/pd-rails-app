@@ -52,7 +52,21 @@ namespace :setup do
   end
 end
 
+namespace :deploy do
+  desc "Run rake yarn install"
+  task :yarn_install do
+    on roles(:web) do
+      within release_path do
+        execute("cd #{release_path} && yarn install --silent --no-progress --no-audit --no-optional")
+      end
+    end
+  end
+end
+
 after 'deploy:symlink:release', 'assets:compile'
+before "assets:compile", "deploy:yarn_install"
 after 'assets:compile', 'setup:libraries'
 after 'puma:restart', 'deploy:restart'
 after 'puma:restart', 'delayed_job:restart'
+
+
