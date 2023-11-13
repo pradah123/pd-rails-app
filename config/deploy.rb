@@ -64,7 +64,7 @@ namespace :deploy do
 end
 
 after 'deploy:symlink:release', 'assets:compile'
-before "assets:compile", "deploy:yarn_install"
+before "assets:precompile", "deploy:yarn_install"
 after 'assets:compile', 'setup:libraries'
 after 'puma:restart', 'deploy:restart'
 after 'puma:restart', 'delayed_job:restart'
