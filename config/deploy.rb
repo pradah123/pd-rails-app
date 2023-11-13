@@ -12,7 +12,7 @@ set :rvm_map_bins, fetch(:rvm_map_bins, []).push('rails')
 append :linked_files, "config/database.yml", 'config/master.key', '.env', 'config/puma.rb'
 
 # Default value for linked_dirs is []
-append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "tmp/webpacker", "public/system", "vendor", "storage"
+append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "tmp/webpacker", "public/system", "vendor", "storage", "public/packs", ".bundle", "node_modules"
 
 # Default value for local_user is ENV['USER']
 set :local_user, "ubuntu"
