@@ -50,7 +50,7 @@ module Biosmart
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
-    config.autoload_paths << "#{config.root}/app/lib"
-    config.eager_load_paths << "#{config.root}/app/lib"
+    # config.autoload_paths << "#{config.root}/lib"
+    # config.eager_load_paths << "#{config.root}/lib"
   end
 end
